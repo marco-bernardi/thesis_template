@@ -1,0 +1,140 @@
+\chapter{System and Threat Model}
+\label{models}
+
+\section{System Model}
+
+We consider a collaborative perception and decision-making system involving a fleet of autonomous vehicles. The system operates in discrete time steps \( t \in \{0, 1, \dots, T\} \), where each vehicle processes local sensor data, optionally shares information with others, and decides on its next action based on a shared or enriched understanding of the environment.
+
+\subsection{Vehicle State and Sensors}
+
+Each vehicle \( v \in \{0, 1, \dots, V\} \) at time \( t \) has access to:
+
+\begin{itemize}
+    \item \( s_v^t \): its local sensory state, including:
+    \begin{itemize}
+        \item raw sensor data (e.g., camera images, LiDAR, IMU),
+        \item ego-pose and sensor extrinsics (e.g., camera positions and orientations).
+    \end{itemize}
+\end{itemize}
+
+This input is processed locally by a \textbf{preprocessing function}:
+\[
+f_v^t = \text{pre}(s_v^t)
+\]
+where \( f_v^t \) denotes the local intermediate features extracted by vehicle \( v \).
+
+\subsection{Feature Sharing and Fusion}
+
+Vehicles may communicate their local features to peers. Let \( \mathcal{N}_v \subseteq \{0, \dots, V\} \) denote the set of vehicles collaborating with \( v \). The set of shared features is defined as:
+\[
+F_v^t = \{f_k^t \mid k \in \mathcal{N}_v\}
+\]
+
+A \textbf{fusion function}, which may be centralized or distributed, is used to compute an environmental representation \( e_v^t \) for vehicle \( v \):
+\[
+e_v^t = \text{fuse}(F_v^t)
+\]
+The representation \( e_v^t \) may include semantic maps, object lists, lane structures, drivable areas, or other task-relevant abstractions.
+
+\subsection{Goal and Action Planning}
+
+Each vehicle is assigned a task-specific \textbf{goal} \( g_v \) (e.g., follow a trajectory, reach a waypoint, complete a circuit). The \textbf{decision function} selects the action \( a_v^{t+1} \) for the next time step:
+\[
+a_v^{t+1} = \text{task}(g_v, e_v^t)
+\]
+where \( a_v^{t+1} \) may include motion control commands (speed, steering) or high-level decisions (e.g., switching sensors, communication behavior).
+
+\subsection{Summary of the Pipeline}
+
+At each time step \( t \), the process for each vehicle \( v \) follows these stages:
+
+\begin{enumerate}
+    \item \textbf{Local Perception:}
+    \[
+    f_v^t = \text{pre}(s_v^t)
+    \]
+    
+    \item \textbf{Collaborative Fusion:}
+    \[
+    e_v^t = \text{fuse}(\{f_k^t \}_{k \in \mathcal{N}_v})
+    \]
+    
+    \item \textbf{Decision-Making:}
+    \[
+    a_v^{t+1} = \text{task}(g_v, e_v^t)
+    \]
+\end{enumerate}
+
+\subsection{Remarks}
+
+\begin{itemize}
+    \item The model is agnostic to the specific architecture used for fusion (e.g., BEV-based, message-passing, or attention-based).
+    \item Communication constraints (e.g., delays, packet loss) and the definition of \( \mathcal{N}_v \) can be adapted to the scenario.
+    \item The representation \( e_v^t \) is task-dependent and can be structured accordingly.
+\end{itemize}
+
+\section{Threat Model}
+
+We consider a collaborative multi-agent perception system in which an external adversary aims to compromise the task execution of one or more vehicles by introducing adversarial artifacts into the environment. The attack is executed via static or dynamic adversarial patches that are perceived by one or more vehicles and propagated through the collaboration process.
+
+\subsection{Adversary Capabilities and Goals}
+
+The adversary is a single external entity that is not part of the fleet. The attack consists of placing one or more physical patches in the environment that are visually perceived by one or more vehicles. The adversary's goal is to cause a victim vehicle to construct an incorrect internal representation of the environment, leading to degraded or incorrect task execution.
+
+The attack is considered \textbf{successful} if the primary victim vehicle performs an incorrect or suboptimal action due to the manipulated input, thus failing its assigned task.
+
+\subsection{Vehicle Roles}
+
+We define the following roles for vehicles involved in or affected by the attack:
+
+\begin{itemize}
+    \item \textbf{Receiver}: A vehicle that directly observes the adversarial patch and incorporates it into its local perception.
+    \item \textbf{Primary Victim}: A vehicle whose cognitive model is corrupted due to adversarial information (received either locally or via collaboration) and whose task execution is negatively affected.
+    \item \textbf{Collateral Victim}: A vehicle whose task is indirectly compromised due to the impaired behavior of a primary victim.
+    \item \textbf{Other Vehicles}: Remaining vehicles that are neither directly nor indirectly affected.
+\end{itemize}
+
+Note that a vehicle can be a victim without being a receiver (e.g., when it integrates malicious information shared by others), or it can be both.
+
+\subsection{Adversary Knowledge}
+
+We assume the adversary possesses the following information:
+
+\begin{itemize}
+    \item The general structure and output space of the perception model (black-box access is sufficient).
+    \item The pose of the targeted receiver vehicle at the time of the attack.
+    \item The pose of at least one camera sensor on the receiver vehicle (used to position the patch).
+    \item The pose of the intended victim vehicle (to ensure perceptual corruption reaches the target).
+\end{itemize}
+
+These assumptions correspond to a \textit{static adversary}, who pre-positions patches based on known or predictable vehicle trajectories. This contrasts with approaches such as on-data-fabrication attacks, where the adversary controls a compromised vehicle and thus has real-time access to the system state.
+
+\subsection{Attack Variants}
+
+In addition to static patch attacks, we consider a future variant where the adversary dynamically projects adversarial content using drones, LED screens, or similar devices. In this case, vehicle positions and orientations can be measured or estimated at runtime to place the attack precisely. Such \textit{dynamic attacks} reduce the need for prior assumptions on future trajectories.
+
+\subsection{Attack Flow}
+
+The attack follows this general flow:
+
+\begin{enumerate}
+    \item The receiver vehicle \( v \) perceives an adversarial patch \( m_i \), placed in the environment by the adversary.
+    \item The patch is interpreted as a legitimate object or feature by the perception model:
+    \[
+    f_v^t = \text{pre}(\dots, m_i, \dots)
+    \]
+    \item The resulting feature is fused into the collaborative environment model:
+    \[
+    e_{v'}^t = \text{fuse}(\{f_v^t, f_{v_1}^t, \dots\})
+    \]
+    \item The victim vehicle \( v' \) uses this distorted environmental model for task planning:
+    \[
+    a_{v'}^{t+1} = \text{task}(g_{v'}, e_{v'}^t)
+    \]
+\end{enumerate}
+
+The attack may involve one or multiple patches (\( m_1, m_2, \dots \)) perceived by one or more receivers, resulting in multi-source, multi-target effects.
+
+\subsection{Discussion}
+
+Although intermediate perception corruption may occur at the receiver level, the attack's impact is ultimately measured by its effect on the task execution of victim vehicles. The collaborative setting increases the reach and complexity of the attack, as even vehicles that never directly observe the adversarial artifact can be affected through shared representations.

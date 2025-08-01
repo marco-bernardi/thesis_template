@@ -1,0 +1,52 @@
+\chapter{Related Works}
+\label{related-works}
+
+
+\section{Adversarial Attacks on Single-Vehicle Perception}
+
+Adversarial attacks on autonomous driving systems have primarily focused on components within the perception and cognitive pipeline. 
+These components include object detection, lane detection, traffic light and sign recognition, depth estimation, and, more recently, end-to-end driving models. 
+Each module presents a unique attack surface, and a variety of threat models have been proposed in the literature to exploit these vulnerabilities.
+
+\subsection{Object Detection and Tracking}
+Object detection algorithms, particularly those based on deep convolutional neural networks such as YOLO, SSD, and Faster R-CNN, have been frequent targets of both physical and digital adversarial attacks. 
+Early studies (e.g., \cite{DBLP:journalscorrabs-1712-09665}) demonstrated that printed adversarial patches placed in real-world environments can mislead detectors into ignoring or misclassifying objects. 
+Subsequent research has shown that carefully designed patterns can not only suppress real object detections but also induce the perception of non-existent objects.
+
+In addition to static detection, object tracking models have also shown vulnerability. 
+This includes models based on Siamese architectures, which can be compromised by small spatial perturbations or occlusion-based attacks. 
+Such attacks may cause tracking drift, identity switches, or complete failure in maintaining the track of a target. 
+Several studies have investigated these vulnerabilities in various contexts, including pedestrian detection, traffic sign recognition, and vehicle tracking. 
+These works have demonstrated that even subtle perturbations can result in significant misclassifications or disruptions in tracking performance \cite{10.11453372297.3423359},\cite{10.11453548606.3559390}.
+
+Zhou et al.\ \cite{zhou2024transientadversarial3dprojection} explored how projecting adversarial patterns onto road objects can affect 3D object detection systems. 
+Their findings indicate that such projections can make objects effectively invisible to the detector. In another line of research, Köhler et al.\ \cite{köhler2021rollininherentvulnerabilityrolling} showed that object detectors are inherently vulnerable when using rolling–shutter CMOS cameras, which are commonly deployed in autonomous vehicles. 
+Their study demonstrated that the rolling–shutter effect can be exploited to introduce fine-grained image disruptions that are imperceptible to human observers but lead to misclassification by the detection system.
+
+\subsection{Traffic Light and Road Sign Recognition}
+Traffic sign and traffic light recognition systems have also been shown to be highly vulnerable to physical and digital adversarial attacks. 
+For example, Eykholt et al.\ \cite{10.11453319535.3354259} demonstrated that small perturbations, such as stickers or paint strokes, can cause a stop sign to be misclassified as a speed limit sign. 
+These modifications are often imperceptible or appear benign to human drivers. Similar strategies have been applied to traffic light recognition systems, resulting in false detections of green lights or the failure to detect red signals, thereby posing severe safety risks. 
+Chen et al.\ \cite{277268} investigated how traditional traffic lights using incandescent bulbs can be manipulated by projecting adversarially designed light patterns onto them. Their results showed that by altering the light’s wavelength and intensity, the detection system can be misled about the actual color of the signal.
+
+\subsection{Lane Detection and Lane Centering}
+Lane detection and automated lane centering algorithms rely heavily on vision-based cues from road markings. Studies have shown that adversarial markings or slight alterations to the road surface can cause significant deviations in lane-following behavior [REF]. 
+These attacks are often subtle enough to be ignored by human drivers but cause misalignment or unintended lane changes in autonomous systems. Some works have also explored how projected light or stickers can manipulate the output of lane-following networks in real time [REF].
+
+\subsection{Depth Estimation and vSLAM}
+Depth estimation models, especially monocular depth networks, have been targeted using small perturbations that distort depth perception. 
+Such distortions can mislead a vehicle about the distance to nearby objects, resulting in unsafe maneuvers. 
+Similarly, visual SLAM systems (vSLAM), which rely on consistent feature extraction and matching across frames, can be disrupted by adversarial textures or lighting conditions designed to induce localization drift or map corruption [REF].
+
+\subsection{End-to-End Driving Models}
+End-to-end models that directly map raw sensor input to steering commands or actions have also been studied under adversarial conditions. 
+In these setups, perturbations to camera input can lead to sharp steering angle changes or acceleration errors without affecting any intermediate perception outputs, since the model bypasses modular separation. 
+Although these models are less common in production systems, they highlight the risk of deeply integrated attacks [REF].
+
+\section{Collaborative Perception in Autonomous Driving}
+
+% (Add your text here describing collaborative perception frameworks, e.g., V2V, V2X, multi-agent BEV, etc.)
+
+\section{Security and Adversarial Vulnerabilities in Collaborative Perception}
+
+% (Add your text here on how adversarial attacks extend to collaborative systems, threat models, and defenses.)

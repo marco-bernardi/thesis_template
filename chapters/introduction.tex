@@ -1,0 +1,153 @@
+%!TEX root = ../dissertation.tex
+\chapter{Introduction}
+\label{introduction}
+
+\section{Autonomous and Semi-Autonomous Vehicles}
+Autonomous vehicles (AVs) are revolutionizing transportation, with both fully self-driving and semi-autonomous cars gaining attention from researchers and automakers for their potential to create safer, more efficient roads.
+Modern vehicles come equipped with advanced driver-assistance systems and AI perception that help them spot obstacles, understand traffic signals, and navigate independently.
+In theory, these vehicles can outperform human drivers by reacting faster without fatigue or distraction, potentially reducing accident rates significantly.
+However, the reality shows these systems still have flaws. Self-driving cars sometimes make perception errors that lead to incorrect decisions with serious consequences.
+Take the widely reported fatal crash where an autonomous vehicle detected a highway divider but mistakenly classified it as non-threatening, contributing to the accident.
+Such incidents underscore the critical importance of reliable perception, as autonomous vehicles must accurately interpret their surroundings to ensure safety.
+Yet single-vehicle perception systems have inherent limitations, pointing to the need for more robust approaches
+
+\section{Collaborative Perception in Connected Vehicles}
+Individual vehicles face perception constraints from their sensors' limited field of view and range. Two major challenges stand out: occlusion (when objects are blocked from view) and restricted sensor range. Occlusion happens constantly in traffic, as a pedestrian might be hidden behind another vehicle, invisible to an approaching autonomous car's cameras or LiDAR.
+In traditional autonomous driving, the car wouldn't detect this hidden hazard until potentially too late to avoid collision. Collaborative perception offers a promising solution: when vehicles communicate with each other, they can share what they see, essentially allowing them to "see around corners."
+For example, one car might clearly view a pedestrian that's completely blocked from another car's sight; by sharing this information, the second vehicle receives advance warning and can respond appropriately. Similarly, vehicles can help extend each other's sensing capabilities beyond their natural limits.
+While a car's LiDAR typically only detects objects within about 90 meters, a vehicle further ahead can provide information about traffic conditions beyond that range, giving advance notice of hazards that would otherwise remain undetected until much closer.
+To enable such cooperation, autonomous vehicles are increasingly being equipped with wireless vehicle-to-vehicle (V2V) and vehicle-to-everything (V2X) communication capabilities. This connectivity transforms isolated self-driving cars into a network of connected autonomous vehicles (CAVs) that can exchange real-time information about their surroundings.
+Collaborative perception frameworks allow multiple CAVs to fuse their sensor data (camera images, LiDAR point clouds, radar readings, etc.) in order to build a much more comprehensive understanding of the environment than any single vehicle could on its own.
+Research prototypes have demonstrated that sharing sensor observations or even intermediate features between cars significantly improves the accuracy of detecting objects and predicting hazards, thereby enhancing overall driving safety.
+Different strategies exist for how information is shared and combined, ranging from early fusion (transmitting raw sensor data to neighbors for joint processing) to late fusion (each vehicle sharing only high-level detected objects or intents), each balancing communication bandwidth against perceptual gain.
+Regardless of the method, collaborative perception is widely seen as a promising approach to overcome single-vehicle limitations, reduce occlusion dangers, and generally make autonomous driving more reliable.
+It also aligns with the broader trend of connected smart transportation, where cars cooperate with each other and with infrastructure (e.g. smart traffic lights or roadside sensors) to improve traffic flow and safety.
+However, realizing robust collaborative autonomous driving in the real world comes with numerous challenges beyond just getting vehicles to talk to each other. Practical deployment must address issues of data format standardization, network latency, privacy and trust among vehicles, and ensuring the communication overhead does not outweigh the benefits.
+In particular, trust and security in the shared data are paramount; if one vehicle provides erroneous or malicious information, it could mislead others. Thus, alongside technical integration, researchers must also confront the security vulnerabilities that emerge in multi-vehicle collaboration.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/introduction/permission-settings.png}
+    \caption{Collaborative perception in connected autonomous vehicles}
+    \label{fig:permission-settings}
+\end{figure}
+
+As shown in \autoref{fig:permission-settings}, collaborative perception helps cars overcome the limits of their own sensors.
+On the left, the blue car can’t see a pedestrian crossing the street because a red vehicle blocks its view. But a white car coming from the other direction spots the pedestrian clearly and shares that information. Thanks to this, the blue car can react in time and avoid an accident.
+On the right, the blue car is about to switch lanes but doesn’t see a fast-approaching vehicle that’s just outside its rear sensor range. Fortunately, a white car behind it picks up the approaching vehicle with its sensors and shares that data. With this extra input, the blue car gains a better picture of its surroundings and can change lanes more safely \cite{hu2025collaborativeperceptionconnectedautonomous}.
+
+\section{Security Challenges and Adversarial Attacks in Collaborative Perception}
+
+Connecting vehicles into a collaborative perception network significantly enhances their situational awareness, but it also introduces new security vulnerabilities.
+In a standalone autonomous vehicle, an attacker would need to compromise that vehicle’s sensors or algorithms in isolation.
+In contrast, a network of connected autonomous vehicles (CAVs) provides a broader attack surface, offering more opportunities for a malicious actor to inject false data that could be trusted and acted upon by multiple vehicles.
+Collaborative perception systems are inherently more exposed to adversarial interference. Vehicles in a cooperative network often run the same perception models and exchange a range of data, including camera images, object detections, and neural network feature maps.
+This shared data helps vehicles agree on what is around them. However, it also means that a compromised input from a single vehicle can influence the perception of the entire group.
+For instance, an attacker might intercept vehicle-to-vehicle (V2V) communications and alter the data being transmitted. Alternatively, an adversary could gain control of one vehicle in the network and use it to broadcast deliberately deceptive observations.
+Because this information is frequently encoded in machine-readable formats, such as feature tensors produced by deep learning models, subtle manipulations may not be immediately detectable by human operators or simple plausibility checks.
+The result is that a skilled attacker can introduce false but convincing data into the system. The other vehicles, unaware of the deception, may accept the misleading input as valid and make driving decisions based on it.
+This kind of vulnerability highlights a core challenge in collaborative autonomy: while shared perception improves awareness, it also requires robust safeguards to ensure the trustworthiness of every contributing node in the network.
+
+A significant class of threats in the collaborative driving context involves adversarial attacks targeting the perception system. In these attacks, an adversary deliberately introduces subtle perturbations designed to mislead a vehicle’s sensors or machine learning models.
+Prior research has demonstrated that even advanced vision systems, including object detectors and traffic sign classifiers, can be deceived using physical adversarial patches. \cite{pmlr-v80-athalye18b} \cite{brown2018adversarialpatch} \cite{Chen_2019} \cite{goodfellow2015explainingharnessingadversarialexamples} \cite{szegedy2014intriguingpropertiesneuralnetworks} \cite{10.11453319535.3354259}
+These patches often take the form of printed stickers or patterns applied to stop signs, lane markers, or other features in the driving environment.
+To a human observer, such patches may appear as harmless graffiti or decorative elements. However, when processed by a vehicle’s camera and neural network, they can cause severe misinterpretations.
+For instance, a stop sign altered with an adversarial pattern might be classified as a speed limit sign or not recognized at all.
+These kinds of physical adversarial examples have been validated both in controlled experiments and in real-world scenarios, where they have consistently caused perception systems to fail, despite the fact that the scene appears normal to the human eye.
+In the context of autonomous driving, the implications of such attacks are clear. If a vehicle is tricked into perceiving a nonexistent green light or fails to detect a pedestrian, the resulting decisions can pose serious safety risks. These findings underscore the need for robust defense mechanisms that can detect or mitigate adversarial manipulations before they influence critical driving behavior \cite{zhu2023tpatchtriggeredphysicaladversarial}.
+
+In collaborative perception systems, adversarial attacks can have consequences that extend far beyond a single vehicle. For example, an attacker might place a malicious patch on an object by the roadside. If one vehicle’s camera is deceived by the patch and produces a distorted view of the environment such as detecting a false hazard or failing to recognize a real one that misinformation may be shared with other nearby vehicles through the collaborative network. These vehicles, trusting the shared input, might then make incorrect driving decisions, even if their own sensors did not observe the manipulated object.
+
+In this way, a single tampered input can trigger failures across the entire system. The collaborative network effectively amplifies and spreads the error, making it far more dangerous than if the vehicle operated in isolation. Recent studies on collaborative perception confirm this increased vulnerability. \cite{10.1007978-3-030-58536-5_36} \cite{96294f63afd44ccd9210824e1aa2656c} \cite{hu2022where2commcommunicationefficientcollaborativeperception} \cite{6a619c52e2df4c96ac051544a08e266d} When vehicles exchange feature maps or detection results, an attack on one agent can quietly poison the perception of the entire group, often without raising immediate alarms.
+
+This kind of failure is particularly serious in autonomous driving, where false reports of obstacles or missed detections can result in unsafe behavior. In high-stakes traffic environments, the outcome might be a chain of incorrect decisions or even collisions involving multiple vehicles. The possibility of such cascading failures highlights the urgent need for strong security mechanisms in collaborative autonomous systems.
+
+While collaborative perception offers significant potential to enhance the performance of autonomous vehicles, it also introduces important security challenges that must be addressed. The research community has begun to identify these risks and propose early-stage defenses, including methods for detecting malicious or inconsistent agents within the network \cite{10.1007978-3-030-58536-5_36} \cite{96294f63afd44ccd9210824e1aa2656c} \cite{hu2022where2commcommunicationefficientcollaborativeperception} \cite{6a619c52e2df4c96ac051544a08e266d}. However, more robust and comprehensive solutions are needed to ensure that connected autonomous vehicles (CAVs) can benefit from shared perception without being compromised by inaccurate or intentionally misleading data.
+
+In this work, we focus on a specific threat: physical adversarial patch attacks in a multi-vehicle perception context. We examine how such an attack, even when carried out by an external adversary with limited knowledge of the system, can disrupt the integrity of collaborative perception. Our analysis underscores the need for secure and resilient collaborative frameworks and aims to support the development of defense mechanisms that can enable safer, more reliable autonomous vehicle networks.
+
+\section{Research Questions}
+
+Based on the current landscape and identified vulnerabilities in collaborative perception systems, this work is guided by the following research questions:
+\begin{enumerate}
+    \item How do vulnerabilities identified in single-vehicle perception models translate to or evolve within collaborative perception frameworks involving multiple vehicles?
+    \item How do physical adversarial patch attacks scale in collaborative perception systems, and what new risks emerge when information is shared across multiple vehicles?
+    \item How does the impact of a single compromised vehicle propagate through a collaborative network, and what are the consequences for group-level perception and decision-making?
+    \item Which stages of the collaborative perception pipeline are most susceptible to adversarial interference introduced via physical patches? Azzardata nella nostra ricerca
+    \item How can attack performance be effectively benchmarked across different collaborative fusion strategies, and what metrics best capture system resilience?
+\end{enumerate}
+These questions aim to guide a comprehensive analysis of both the threat landscape and the systemic weaknesses that adversarial patch attacks can exploit in multi-vehicle perception networks.
+
+\section{Contributing}
+
+Most V2X models have been trained and evaluated primarily on collected datasets, both in simulation environments such as those based on CARLA (for example, OPV2V\cite{xu2022opv2vopenbenchmarkdataset}),
+and in real-world scenarios, including datasets captured in various cities like DAIR-V2X\cite{DAIR-V2X2021} and nuScenes\cite{nuscenes2019}.
+
+However, there is a noticeable lack of literature exploring how these models perform in real-time, real-world conditions,
+particularly under standard operating modes without adversarial interference. To begin assessing the feasibility of deploying adversarial attacks in real-world contexts,
+it is essential to first establish a baseline understanding of how the model behaves in such settings and whether it is capable of achieving an adequate level of accuracy.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/introduction/scale_car}
+    \caption{The scaled model of the car used during the testing, equipped with four cameras, two ArUco markers, and a proximity sensor.}
+    \label{scale-car}
+\end{figure}
+
+\subsection{Static Testing}
+
+By static testing, we refer to the evaluation of a model’s performance on a predefined set of images and input data required to run the model, without any adversarial interference, and collected either in real-world scenarios or controlled environments.
+These tests are defined as static because there was no real-time interaction between the model and the environment. The data were gathered using stationary vehicles positioned differently at each time step.
+The first test was conducted on a closed road circuit, where we could control the exact positions of the vehicles and external factors such as pedestrians and other vehicles.
+The second test was carried out indoors, in a closed environment using 1:20 scale models of cars [see Figure \ref{scale-car}] and road infrastructure. This setup allowed us to control all variables and minimize unwanted interference or noise.
+Two collaborative models were considered during the testing phase, CoBEVT \cite{xu2022cobevtcooperativebirdseye} and UniV2X \cite{yu2024_univ2x}, in order to gain practical insights into the behavior of these types of models.
+
+\subsubsection{UniV2X}
+
+UniV2X is an end-to-end cooperative autonomous driving framework that integrates all key driving modules, including perception, mapping, occupancy prediction, and planning. 
+It leverages both ego-vehicle and infrastructure sensor data through V2X communication to improve decision-making in complex driving environments. 
+Unlike existing approaches that focus on optimizing individual components, UniV2X adopts a unified learning strategy to enhance overall planning performance. 
+A key element of the framework is its sparse-dense hybrid data transmission and fusion mechanism, which supports efficient collaboration under real-world communication constraints. 
+Experimental results on the DAIR-V2X \cite{DAIR-V2X2021} dataset show that UniV2X outperforms several benchmark methods across both intermediate tasks and final planning accuracy, while maintaining strong interpretability and communication efficiency.
+
+\begin{figure}[ht]
+  \centering
+  \begin{minipage}[t]{0.48\linewidth}
+    \includegraphics[width=\linewidth,height=130pt]{figures/introduction/univ2x_infra.png}
+    \label{fig:univ2x_infra}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \includegraphics[width=\linewidth,height=130pt]{figures/introduction/univ2x_veh.png}
+    \label{fig:univ2x_veh}
+  \end{minipage}
+  \caption{Key frames used by the UniV2X cooperative perception model: infrastructure view (a) and vehicle view (b).}
+  \label{fig:univ2x_frames}
+\end{figure}
+
+
+Although the model was tested under various conditions and scenarios, it consistently failed to provide accurate predictions of nearby objects and their trajectories. 
+It also struggled to reliably detect lane markings. These limitations suggest a significant domain gap between the data used during training and the real-world data used in our tests, leading to poor generalization performance.
+
+Further experiments were conducted by altering and reusing data from the original training dataset, in an attempt to better align the test conditions with the model's expected input. 
+However, these tests were inconclusive. The model produced nearly identical outputs regardless of the input variations, indicating a lack of sensitivity to changes in the environment.
+
+Assuming that our input data were correct and well-formatted, this behavior points to the possibility that UniV2X is overfitted to its training data. 
+This would explain its inability to generalize to new scenes or unfamiliar conditions, which is a critical limitation for deployment in real-world dynamic environments.
+
+We attempted to contact the authors of the model to clarify details about the training dataset and to confirm whether our implementation pipeline was aligned with the intended usage. 
+Unfortunately, we did not receive a response, which limited our ability to further troubleshoot or validate our findings.
+
+\subsubsection{CoBEVT}
+
+CoBEVT is a collaborative perception framework designed to enhance bird’s eye view (BEV) semantic segmentation through multi-agent, multi-camera systems. 
+Unlike traditional single-agent approaches, CoBEVT leverages Vehicle-to-Vehicle (V2V) communication to fuse visual data from multiple viewpoints and agents, effectively addressing challenges such as occlusion and limited perception range. 
+At the core of the framework is the Fused Axial Attention (FAX) module, which enables efficient spatial interaction modeling across views and agents within a Transformer-based architecture. 
+CoBEVT has demonstrated state-of-the-art performance on the OPV2V \cite{xu2022cobevtcooperativebirdseye} dataset and shows strong generalization capabilities across related tasks, including single-agent BEV segmentation and multi-agent 3D object detection.
+
+\subsection{Dynamic Testing}
+
+Dynamic testing refers to the evaluation of a model’s performance in real time, where the model interacts with the environment and receives input data from sensors such as cameras, GPS, and IMU, while the vehicles are in motion.
+
+Due to hardware limitations and the lack of adequate space, dynamic tests were conducted exclusively in the indoor environment, using the same 1:20 scale models of cars [see Figure \ref{scale-car} ] and road infrastructure employed in the static tests. A ceiling-mounted camera was used to track the vehicles' movements and provide input data to the model.
+
+Vehicle tracking was achieved by stitching data from two ArUco markers placed on the front and rear of each vehicle. This setup enabled the model to receive real-time coordinates (x, y, z) and orientation information.
