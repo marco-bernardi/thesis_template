@@ -11,7 +11,7 @@ Each module presents a unique attack surface, and a variety of threat models hav
 \subsection{Object Detection and Tracking}
 Object detection algorithms, particularly those based on deep convolutional neural networks such as YOLO, SSD, and Faster R-CNN, have been frequent targets of both physical and digital adversarial attacks. 
 Early studies (e.g., \cite{DBLP:journalscorrabs-1712-09665}) demonstrated that printed adversarial patches placed in real-world environments can mislead detectors into ignoring or misclassifying objects. 
-Subsequent research has shown that carefully designed patterns can not only suppress real object detections but also induce the perception of non-existent objects.
+Subsequent research has shown tha t carefully designed patterns can not only suppress real object detections but also induce the perception of non-existent objects.
 
 In addition to static detection, object tracking models have also shown vulnerability. 
 This includes models based on Siamese architectures, which can be compromised by small spatial perturbations or occlusion-based attacks. 
@@ -44,6 +44,55 @@ In these setups, perturbations to camera input can lead to sharp steering angle 
 Although these models are less common in production systems, they highlight the risk of deeply integrated attacks [REF].
 
 \section{Collaborative Perception in Autonomous Driving}
+
+Collaborative perception is an emerging research area in autonomous driving that seeks to overcome the \textit{inherent limitations of single-agent perception systems}, such as occlusions and the inability to detect distant or partially visible objects in complex traffic scenes. 
+By enabling autonomous vehicles to share sensory data through Vehicle-to-Vehicle~(V2V) or Vehicle-to-Everything~(V2X) communication protocols, collaborative perception significantly improves both perception accuracy and coverage range \cite{hu2022where2commcommunicationefficientcollaborativeperception, xu2022cobevtcooperativebirdseye}. 
+This paradigm has the potential to make camera-based systems competitive with, or even superior to, more expensive LiDAR-based solutions.
+
+At its core, collaborative perception involves the exchange of \textit{complementary perceptual information} between multiple agents, with the objective of maximizing collective perception performance under constraints such as limited communication bandwidth and restricted communication rounds \cite{hu2023collaborationhelpscameraovertake}.
+A central challenge lies in determining which messages are both \textit{informative and compact}, allowing for efficient transmission without overwhelming the network.
+
+The viability of collaborative perception relies on several \textbf{key components}, including:
+
+\begin{itemize}
+    \item An \textbf{Observation Encoder} that extracts feature maps from raw sensor data, such as RGB images or 3D point clouds.
+    \item A \textbf{Bird’s Eye View (BEV)} representation to project features into a shared global coordinate frame, thereby simplifying spatial alignment across agents.
+    \item A \textbf{Spatial Confidence Generator} that produces confidence maps identifying perceptually critical regions, guiding decisions on \textit{where} communication should occur.
+    \item \textbf{Spatial Confidence-Aware Communication Modules} that use these confidence maps to construct sparse communication graphs, addressing \textit{who} communicates \textit{what} and \textit{where}.
+    \item A \textbf{Spatial Confidence-Aware Message Fusion Module} to aggregate received messages and enhance local feature representations.
+    \item A \textbf{Detection Decoder} that transforms the fused feature maps into final outputs such as 3D object detections or semantic segmentation results.
+\end{itemize}
+
+There are three main strategies for feature-level fusion in collaborative perception:
+
+\begin{enumerate}
+    \item \textbf{Early Fusion}: Agents share raw sensor data (e.g., full point clouds). Although this offers high-fidelity information, it demands significant communication bandwidth, making it less feasible in real-world applications.
+    
+    \item \textbf{Intermediate Fusion}: Agents exchange intermediate features extracted from deep networks. 
+    This strategy strikes a balance between performance and bandwidth and is widely adopted in state-of-the-art frameworks such as CoBEVT, Where2comm, CoCa3D, and CodeFilling \cite{xu2022cobevtcooperativebirdseye, hu2022where2commcommunicationefficientcollaborativeperception, hu2023collaborationhelpscameraovertake, hu2024communicationefficientcollaborativeperceptioninformation}.
+
+    \item \textbf{Late Fusion}: Agents only transmit final perception outputs (e.g., bounding boxes). While computationally efficient, it typically yields marginal performance gains and is more susceptible to noise.
+\end{enumerate}
+
+To further improve efficiency and accuracy, a number of advanced techniques have been proposed:
+
+\begin{itemize}
+    \item \textbf{Fused Axial Attention (FAX)}: A sparse attention mechanism that captures both local and global interactions across views and agents, reducing computational overhead. It is a core component of CoBEVT \cite{xu2022cobevtcooperativebirdseye}.
+    
+    \item \textbf{Spatial Confidence Maps}: As introduced in Where2comm, these maps allow agents to communicate only perceptually critical information. CoCa3D extends this idea by incorporating both \textit{detection confidence} and \textit{depth uncertainty} to prioritize and compress shared data \cite{hu2022where2commcommunicationefficientcollaborativeperception, hu2023collaborationhelpscameraovertake}.
+    
+    \item \textbf{Codebook-Based Message Representation}: Introduced in CodeFilling, this technique replaces high-dimensional features with compact integer code indices, drastically reducing message size while maintaining semantic fidelity \cite{hu2024communicationefficientcollaborativeperceptioninformation}.
+    
+    \item \textbf{Collaborative Depth Estimation (Co-Depth)}: Implemented in CoCa3D, this approach mitigates the ambiguity of monocular depth estimation by leveraging multi-agent collaboration \cite{hu2023collaborationhelpscameraovertake}.
+    
+    \item \textbf{Collaborative Feature Learning (Co-FL)}: Also in CoCa3D, this technique allows the sharing of 3D detection features to overcome occlusions and range limitations faced by single-agent systems.
+    
+    \item \textbf{Hybrid Feature Fusion (CoHFF)}: Used for 3D semantic occupancy prediction, CoHFF combines task-specific features (e.g., semantics and occupancy) and compresses shared features across agents, enhancing holistic environmental understanding.
+\end{itemize}
+
+Despite these advances, collaborative perception still faces several open challenges. These include the need for more diverse real-world datasets, management of temporal and spatial asynchronies, and ensuring robustness under various environmental conditions such as poor lighting and adverse weather. Future research is expected to explore temporal extensions of current frameworks, aiming to further reduce communication costs while maintaining high-quality perception performance.
+
+
 
 % (Add your text here describing collaborative perception frameworks, e.g., V2V, V2X, multi-agent BEV, etc.)
 
