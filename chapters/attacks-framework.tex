@@ -1,0 +1,103 @@
+\chapter{Attacks Frameworks}
+\label{Attacks Frameworks}
+
+Evaluating the robustness of collaborative perception systems requires the design of structured and reproducible attack frameworks.
+These frameworks provide a controlled method for introducing perturbations, allowing researchers to measure performance degradation under adversarial conditions and to identify the vulnerabilities being exploited.
+
+In this work, we categorise attack strategies into two main classes:
+\begin{itemize}
+    \item Human understandable attacks: adversarial manipulations that are perceptible to human observers and physically embedded in the driving environment.
+    \item Non-human understandable attacks: perturbations that are imperceptible or unintuitive to humans, typically applied directly in the digital domain, such as pixel-level noise or feature-space perturbations.
+\end{itemize}
+Studying both categories allows us to analyse the difference between physical-world manipulations and digital perturbations, and to observe how each type affects collaborative perception systems.
+In particular, human understandable attacks are relevant for real-world deployment scenarios, while non-human understandable attacks target the algorithmic vulnerabilities of the perception models themselves.
+Evaluating both provides a broader view of the potential attack surface.
+
+\section{Human Understandable Attacks}
+
+In our work, human understandable attacks focus on manipulating the physical environment to deceive perception systems.
+These attacks leverage the use of adversarial patches, designed to represent an object of interest, such as a pedestrian or a vehicle, to mislead the perception model into misclassifying or overlooking the object.
+For example, an image resembling a car printed on a billboard can create false positives or suppress true detections, leading to potentially dangerous situations on the road.
+
+These patches are adapted to the surface where they will be placed, taking into account viewing angles and distances to maximise their effectiveness.
+Once created, they are physically positioned in the environment, for example on a billboard, wall, or directly on the ground.
+Because this approach requires limited technical expertise, it is accessible to a wide range of potential adversaries.
+
+In our experiments, this attack type was subcategorised into \textit{vertical} and \textit{horizontal} attacks:
+\begin{itemize}
+    \item \textbf{Vertical attacks}: the patch is placed on a vertical surface, such as a wall or billboard next to the road lane.
+    \item \textbf{Horizontal attacks}: the patch is placed on the ground in front of the vehicle, ensuring that it is captured by the sensors and shared in the collaborative network.
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/attacks_framework/vertical_attack.png}
+    \caption{Vertical attack setup}
+    \label{fig:vertical_attack}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/attacks_framework/hori_attack.png}
+    \caption{Horizontal attack setup}
+    \label{fig:horizontal_attack}
+\end{figure}
+
+Figures~\ref{fig:vertical_attack} and \ref{fig:horizontal_attack} illustrate the different setups, highlighting the strategic placement of adversarial patches to mislead perception systems.
+
+\subsection{Patch the Environment}
+
+For the tests conducted in the physical setups (both indoor and outdoor), the adversarial patches were physically placed within the environment.
+For the experiments carried out in CARLA, we modified the \texttt{Town06} map by adding these patches at different locations.
+
+To evaluate the attack’s effectiveness, we varied both the size of the patch and its placement within the scene.
+In particular, we positioned the patch at different distances from the road to assess how spatial location influences detection performance.
+
+\section{Non-Human Understandable Attacks}
+
+Non-human understandable attacks introduce perturbations into perception system inputs that remain imperceptible to human observers while still inducing erroneous predictions.
+These are subtle, carefully designed modifications to the input data that exploit the model’s learned decision boundaries.
+
+A common approach in this category is the generation of \textit{adversarial examples} using gradient-based optimisation methods, such as the Fast Gradient Sign Method (FGSM) and Projected Gradient Descent (PGD).
+These produce small perturbations that can lead to misclassifications, bounding box shifts, or missed detections, despite their minimal magnitude.
+
+In our study, we explored the feasibility of applying such perturbations to the CoBEVT model by integrating generated patches directly into the input data.
+Evaluation was based on the change in \textit{Intersection over Union} (IoU) between predictions on patched inputs and predictions on clean inputs.
+This choice of metric allowed us to quantify the extent to which the patch altered the perceived scene.
+
+\subsection{Patch Generator}
+
+For this category, we developed an adversarial patch generator in a \textit{black-box} setting, optimising solely based on the perception system’s output without access to its internal parameters.
+The generator was a compact convolutional neural network (CNN) suitable for iterative optimisation.
+
+\subsubsection{Training Objective and Process}
+
+The objective was to maximise the misclassification rate by minimising the IoU between the predicted mask and the ground truth mask:
+
+\[
+    \mathcal{L} = 1 - \frac{|P \cap G|}{|P \cup G|}
+\]
+where \(P\) is the set of predicted pixels and \(G\) the set of ground truth pixels.
+
+Training began with a \(40 \times 40\) pixel patch placed in the lower region of the front camera frames.
+The perception model’s segmentation output was compared to the ground truth, and the resulting loss \(\mathcal{L}\) was backpropagated to update the patch generator.
+Over iterations, the generator adapted to produce patterns that progressively reduced IoU.
+
+\section{Comparison of Attack Categories}
+
+\begin{table}[h!]
+    \centering
+    \caption{Comparison between human and non-human understandable attacks}
+    \begin{tabular}{p{3cm}p{5cm}p{5cm}}
+        \toprule
+        \textbf{Aspect}           & \textbf{Human Understandable}                      & \textbf{Non-Human Understandable}                        \\
+        \midrule
+        Visibility                & Perceptible to humans                              & Imperceptible to humans                                  \\
+        Deployment                & Physical placement in the environment              & Digital injection into input data                        \\
+        Required Knowledge        & Low to moderate                                    & Low to high (depending on model access)                  \\
+        Environmental Sensitivity & Affected by lighting, occlusion, and distance      & Affected by preprocessing, compression, domain shift     \\
+        Impact in Collaboration   & Can mislead all connected agents                   & Can propagate subtle but consistent errors across agents \\
+        Evaluation Metric         & Detection accuracy drop, false positives/negatives & IoU change between patched and clean predictions         \\
+        \bottomrule
+    \end{tabular}
+\end{table}

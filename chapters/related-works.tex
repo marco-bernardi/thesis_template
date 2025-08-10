@@ -4,104 +4,127 @@
 
 \section{Adversarial Attacks on Single-Vehicle Perception}
 
-Adversarial attacks on autonomous driving systems have primarily focused on components within the perception and cognitive pipeline. 
-These components include object detection, lane detection, traffic light and sign recognition, depth estimation, and, more recently, end-to-end driving models. 
-Each module presents a unique attack surface, and a variety of threat models have been proposed in the literature to exploit these vulnerabilities.
+Research on adversarial attacks in autonomous driving has predominantly targeted perception and cognitive pipeline components.
+These include object detection, object tracking, lane detection, traffic light and sign recognition, depth estimation, and more recently, end-to-end driving models.
+Each of these modules represents a distinct attack surface, and numerous threat models have been proposed to exploit their respective vulnerabilities.
 
 \subsection{Object Detection and Tracking}
-Object detection algorithms, particularly those based on deep convolutional neural networks such as YOLO, SSD, and Faster R-CNN, have been frequent targets of both physical and digital adversarial attacks. 
-Early studies (e.g., \cite{DBLP:journalscorrabs-1712-09665}) demonstrated that printed adversarial patches placed in real-world environments can mislead detectors into ignoring or misclassifying objects. 
-Subsequent research has shown tha t carefully designed patterns can not only suppress real object detections but also induce the perception of non-existent objects.
 
-In addition to static detection, object tracking models have also shown vulnerability. 
-This includes models based on Siamese architectures, which can be compromised by small spatial perturbations or occlusion-based attacks. 
-Such attacks may cause tracking drift, identity switches, or complete failure in maintaining the track of a target. 
-Several studies have investigated these vulnerabilities in various contexts, including pedestrian detection, traffic sign recognition, and vehicle tracking. 
-These works have demonstrated that even subtle perturbations can result in significant misclassifications or disruptions in tracking performance \cite{10.11453372297.3423359},\cite{10.11453548606.3559390}.
+Object detection algorithms based on deep convolutional neural networks, such as YOLO, SSD, and Faster R-CNN, have been frequent targets of both physical and digital adversarial attacks.
+Early studies, such as \cite{DBLP:journalscorrabs-1712-09665}, demonstrated that printed adversarial patches placed in real-world environments can cause detectors to ignore or misclassify objects.
+Later research showed that carefully crafted patterns can not only suppress legitimate detections but also induce false positives, creating the perception of objects that do not exist.
 
-Zhou et al.\ \cite{zhou2024transientadversarial3dprojection} explored how projecting adversarial patterns onto road objects can affect 3D object detection systems. 
-Their findings indicate that such projections can make objects effectively invisible to the detector. In another line of research, Köhler et al.\ \cite{köhler2021rollininherentvulnerabilityrolling} showed that object detectors are inherently vulnerable when using rolling–shutter CMOS cameras, which are commonly deployed in autonomous vehicles. 
-Their study demonstrated that the rolling–shutter effect can be exploited to introduce fine-grained image disruptions that are imperceptible to human observers but lead to misclassification by the detection system.
+Beyond static detection, object tracking systems have also been shown to be vulnerable.
+Models based on Siamese architectures, for instance, can be disrupted by small spatial perturbations or occlusion-based attacks, leading to tracking drift, identity switches, or complete loss of target.
+Studies have confirmed these vulnerabilities across different applications, including pedestrian detection, traffic sign recognition, and vehicle tracking \cite{10.11453372297.3423359,10.11453548606.3559390}.
+
+Zhou et al.\ \cite{zhou2024transientadversarial3dprojection} investigated adversarial projection attacks on 3D object detection, showing that projecting specific patterns onto physical objects can make them effectively invisible to detectors.
+In a related direction, Köhler et al.\ \cite{köhler2021rollininherentvulnerabilityrolling} demonstrated that object detectors using rolling–shutter CMOS cameras are susceptible to fine-grained image distortions introduced during sensor readout.
+These distortions are imperceptible to human observers but can reliably trigger misclassifications, revealing a hardware-specific attack vector.
 
 \subsection{Traffic Light and Road Sign Recognition}
-Traffic sign and traffic light recognition systems have also been shown to be highly vulnerable to physical and digital adversarial attacks. 
-For example, Eykholt et al.\ \cite{10.11453319535.3354259} demonstrated that small perturbations, such as stickers or paint strokes, can cause a stop sign to be misclassified as a speed limit sign. 
-These modifications are often imperceptible or appear benign to human drivers. Similar strategies have been applied to traffic light recognition systems, resulting in false detections of green lights or the failure to detect red signals, thereby posing severe safety risks. 
-Chen et al.\ \cite{277268} investigated how traditional traffic lights using incandescent bulbs can be manipulated by projecting adversarially designed light patterns onto them. Their results showed that by altering the light’s wavelength and intensity, the detection system can be misled about the actual color of the signal.
+
+Traffic light and road sign recognition modules are critical for autonomous decision-making and have been extensively examined under adversarial conditions.
+Eykholt et al.\ \cite{10.11453319535.3354259} showed that small physical modifications, such as stickers or paint strokes, can cause a stop sign to be misclassified as a speed limit sign.
+Such perturbations are subtle enough to be overlooked by human drivers but can trigger significant decision errors in automated systems.
+
+Similar strategies have been applied to traffic light recognition, where attacks can cause false detections of green signals or suppress red light detection entirely.
+Chen et al.\ \cite{277268} demonstrated that traditional incandescent traffic lights can be manipulated through projected light patterns with specific wavelengths and intensities, misleading recognition systems about the actual signal state.
+These findings highlight the susceptibility of perception models to both physical and optical-domain adversarial interference.
 
 \subsection{Lane Detection and Lane Centering}
-Lane detection and automated lane centering algorithms rely heavily on vision-based cues from road markings. Studies have shown that adversarial markings or slight alterations to the road surface can cause significant deviations in lane-following behavior [REF]. 
-These attacks are often subtle enough to be ignored by human drivers but cause misalignment or unintended lane changes in autonomous systems. Some works have also explored how projected light or stickers can manipulate the output of lane-following networks in real time [REF].
+
+Lane detection and lane centering systems rely on continuous visual cues from road markings.
+Studies have shown that adversarial modifications, such as altered road paint patterns or precisely placed stickers, can induce lane-following errors, including unintended lane changes or departures \cite{sato2021robustnesslanedetectionmodels} \cite{274691}.
+These vulnerabilities are particularly critical because they affect the vehicle’s primary lateral control system.
 
 \subsection{Depth Estimation and vSLAM}
-Depth estimation models, especially monocular depth networks, have been targeted using small perturbations that distort depth perception. 
-Such distortions can mislead a vehicle about the distance to nearby objects, resulting in unsafe maneuvers. 
-Similarly, visual SLAM systems (vSLAM), which rely on consistent feature extraction and matching across frames, can be disrupted by adversarial textures or lighting conditions designed to induce localization drift or map corruption [REF].
 
-\subsection{End-to-End Driving Models}
-End-to-end models that directly map raw sensor input to steering commands or actions have also been studied under adversarial conditions. 
-In these setups, perturbations to camera input can lead to sharp steering angle changes or acceleration errors without affecting any intermediate perception outputs, since the model bypasses modular separation. 
-Although these models are less common in production systems, they highlight the risk of deeply integrated attacks [REF].
+Monocular depth estimation networks have been shown to be sensitive to small image perturbations that distort depth perception.
+Such manipulations can mislead a vehicle into misjudging distances, leading to unsafe behaviours such as premature braking or collision with nearby objects.
+Visual SLAM (vSLAM) systems, which depend on stable feature extraction and tracking, can also be compromised by adversarial textures or dynamic lighting patterns designed to cause localization drift or map corruption \cite{299539}.
+These attacks directly threaten the reliability of navigation and mapping pipelines in autonomous systems.
 
 \section{Collaborative Perception in Autonomous Driving}
 
-Collaborative perception is an emerging research area in autonomous driving that seeks to overcome the \textit{inherent limitations of single-agent perception systems}, such as occlusions and the inability to detect distant or partially visible objects in complex traffic scenes. 
-By enabling autonomous vehicles to share sensory data through Vehicle-to-Vehicle~(V2V) or Vehicle-to-Everything~(V2X) communication protocols, collaborative perception significantly improves both perception accuracy and coverage range \cite{hu2022where2commcommunicationefficientcollaborativeperception, xu2022cobevtcooperativebirdseye}. 
-This paradigm has the potential to make camera-based systems competitive with, or even superior to, more expensive LiDAR-based solutions.
+Collaborative perception is an emerging research direction in autonomous driving that addresses the inherent limitations of single-agent perception systems, such as occlusions and the inability to detect distant or partially visible objects in complex traffic scenes.
+By enabling autonomous vehicles to share sensory information via Vehicle-to-Vehicle (V2V) or Vehicle-to-Everything (V2X) communication, it significantly extends perception range and improves detection accuracy \cite{hu2022where2commcommunicationefficientcollaborativeperception, xu2022cobevtcooperativebirdseye}.
+This approach has the potential to make camera-based perception competitive with, or even superior to, costlier LiDAR-based solutions.
 
-At its core, collaborative perception involves the exchange of \textit{complementary perceptual information} between multiple agents, with the objective of maximizing collective perception performance under constraints such as limited communication bandwidth and restricted communication rounds \cite{hu2023collaborationhelpscameraovertake}.
-A central challenge lies in determining which messages are both \textit{informative and compact}, allowing for efficient transmission without overwhelming the network.
-
-The viability of collaborative perception relies on several \textbf{key components}, including:
+At its core, collaborative perception relies on the exchange of complementary perceptual data among multiple agents, with the goal of maximising collective understanding of the environment while respecting constraints such as limited bandwidth and restricted communication cycles \cite{hu2023collaborationhelpscameraovertake}.
+A central challenge lies in determining which information is most informative and how to transmit it in a compact form, so as to avoid overwhelming the communication network.
 
 \begin{itemize}
-    \item An \textbf{Observation Encoder} that extracts feature maps from raw sensor data, such as RGB images or 3D point clouds.
-    \item A \textbf{Bird’s Eye View (BEV)} representation to project features into a shared global coordinate frame, thereby simplifying spatial alignment across agents.
-    \item A \textbf{Spatial Confidence Generator} that produces confidence maps identifying perceptually critical regions, guiding decisions on \textit{where} communication should occur.
-    \item \textbf{Spatial Confidence-Aware Communication Modules} that use these confidence maps to construct sparse communication graphs, addressing \textit{who} communicates \textit{what} and \textit{where}.
-    \item A \textbf{Spatial Confidence-Aware Message Fusion Module} to aggregate received messages and enhance local feature representations.
-    \item A \textbf{Detection Decoder} that transforms the fused feature maps into final outputs such as 3D object detections or semantic segmentation results.
+    \item An \textbf{Observation Encoder} that extracts features from raw sensor data (e.g., RGB images or LiDAR point clouds).
+    \item A \textbf{Bird’s Eye View (BEV) projection} to transform these features into a common spatial frame, simplifying alignment between agents.
+    \item A \textbf{Spatial Confidence Generator} that identifies perceptually important regions and guides communication decisions.
+    \item \textbf{Spatial Confidence-Aware Communication Modules} that decide which agents should communicate, what information should be sent, and where it should be applied.
+    \item A \textbf{Spatial Confidence-Aware Message Fusion Module} to integrate received information into the local feature representation.
+    \item A \textbf{Detection Decoder} that transforms fused features into outputs such as 3D detections or semantic segmentation maps.
 \end{itemize}
 
-There are three main strategies for feature-level fusion in collaborative perception:
+Current collaborative perception frameworks generally adopt one of three feature fusion strategies:
 
 \begin{enumerate}
-    \item \textbf{Early Fusion}: Agents share raw sensor data (e.g., full point clouds). Although this offers high-fidelity information, it demands significant communication bandwidth, making it less feasible in real-world applications.
-    
-    \item \textbf{Intermediate Fusion}: Agents exchange intermediate features extracted from deep networks. 
-    This strategy strikes a balance between performance and bandwidth and is widely adopted in state-of-the-art frameworks such as CoBEVT, Where2comm, CoCa3D, and CodeFilling \cite{xu2022cobevtcooperativebirdseye, hu2022where2commcommunicationefficientcollaborativeperception, hu2023collaborationhelpscameraovertake, hu2024communicationefficientcollaborativeperceptioninformation}.
-
-    \item \textbf{Late Fusion}: Agents only transmit final perception outputs (e.g., bounding boxes). While computationally efficient, it typically yields marginal performance gains and is more susceptible to noise.
+\item \textbf{Early Fusion}: sharing raw sensor data, offering maximal detail but requiring prohibitively high bandwidth.
+\item \textbf{Intermediate Fusion}: sharing intermediate neural features, balancing communication efficiency and perception performance. This approach is used in state-of-the-art frameworks such as CoBEVT, Where2comm, CoCa3D, and CodeFilling \cite{xu2022cobevtcooperativebirdseye, hu2022where2commcommunicationefficientcollaborativeperception, hu2023collaborationhelpscameraovertake, hu2024communicationefficientcollaborativeperceptioninformation}.
+\item \textbf{Late Fusion}: sharing only final perception outputs (e.g., bounding boxes), which minimises bandwidth but often leads to limited performance gains and higher susceptibility to noise.
 \end{enumerate}
 
-To further improve efficiency and accuracy, a number of advanced techniques have been proposed:
+Recent work has introduced several techniques to improve the efficiency and robustness of these frameworks:
 
 \begin{itemize}
-    \item \textbf{Fused Axial Attention (FAX)}: A sparse attention mechanism that captures both local and global interactions across views and agents, reducing computational overhead. It is a core component of CoBEVT \cite{xu2022cobevtcooperativebirdseye}.
-    
-    \item \textbf{Spatial Confidence Maps}: As introduced in Where2comm, these maps allow agents to communicate only perceptually critical information. CoCa3D extends this idea by incorporating both \textit{detection confidence} and \textit{depth uncertainty} to prioritize and compress shared data \cite{hu2022where2commcommunicationefficientcollaborativeperception, hu2023collaborationhelpscameraovertake}.
-    
-    \item \textbf{Codebook-Based Message Representation}: Introduced in CodeFilling, this technique replaces high-dimensional features with compact integer code indices, drastically reducing message size while maintaining semantic fidelity \cite{hu2024communicationefficientcollaborativeperceptioninformation}.
-    
-    \item \textbf{Collaborative Depth Estimation (Co-Depth)}: Implemented in CoCa3D, this approach mitigates the ambiguity of monocular depth estimation by leveraging multi-agent collaboration \cite{hu2023collaborationhelpscameraovertake}.
-    
-    \item \textbf{Collaborative Feature Learning (Co-FL)}: Also in CoCa3D, this technique allows the sharing of 3D detection features to overcome occlusions and range limitations faced by single-agent systems.
-    
-    \item \textbf{Hybrid Feature Fusion (CoHFF)}: Used for 3D semantic occupancy prediction, CoHFF combines task-specific features (e.g., semantics and occupancy) and compresses shared features across agents, enhancing holistic environmental understanding.
+\item \textbf{Fused Axial Attention (FAX)}: a sparse attention mechanism capturing both local and global spatial interactions, central to CoBEVT \cite{xu2022cobevtcooperativebirdseye}.
+\item \textbf{Spatial Confidence Maps}: introduced in Where2comm to transmit only critical perceptual information; extended in CoCa3D with detection confidence and depth uncertainty for prioritised data sharing \cite{hu2022where2commcommunicationefficientcollaborativeperception, hu2023collaborationhelpscameraovertake}.
+\item \textbf{Codebook-Based Message Representation}: from CodeFilling, replacing high-dimensional features with compact code indices to drastically reduce message size while preserving semantics \cite{hu2024communicationefficientcollaborativeperceptioninformation}.
+\item \textbf{Collaborative Depth Estimation (Co-Depth)}: in CoCa3D, mitigating monocular depth ambiguity through multi-agent fusion.
+\item \textbf{Collaborative Feature Learning (Co-FL)}: also in CoCa3D, sharing 3D detection features to overcome occlusions and limited range.
+\item \textbf{Hybrid Feature Fusion (CoHFF)}: used in semantic occupancy prediction, combining and compressing multi-task features (e.g., semantics and occupancy) for a more comprehensive scene understanding.
 \end{itemize}
 
-Despite these advances, collaborative perception still faces several open challenges. These include the need for more diverse real-world datasets, management of temporal and spatial asynchronies, and ensuring robustness under various environmental conditions such as poor lighting and adverse weather. Future research is expected to explore temporal extensions of current frameworks, aiming to further reduce communication costs while maintaining high-quality perception performance.
-
-
-
-% (Add your text here describing collaborative perception frameworks, e.g., V2V, V2X, multi-agent BEV, etc.)
+Despite rapid progress, collaborative perception still faces open challenges.
+These include the scarcity of diverse real-world datasets, handling temporal and spatial misalignment between agents, and ensuring resilience under adverse conditions such as poor lighting or inclement weather.
+Future research is likely to focus on temporal extensions of current frameworks, aiming to further reduce communication overhead while maintaining high-fidelity perception in dynamic and unpredictable environments.
 
 \section{Security and Adversarial Vulnerabilities in Collaborative Perception}
 
-% (Add your text here on how adversarial attacks extend to collaborative systems, threat models, and defenses.)
-Guardare questi paper: \cite{wang2025rcdnrobustcamerainsensitivitycollaborative}
+While collaborative perception offers clear advantages over single-agent systems, it also introduces new attack surfaces and amplifies certain vulnerabilities.
+In these settings, malicious or erroneous information from one agent can propagate through the network, affecting the perception of all cooperating vehicles.
+This interdependence means that attacks exploiting communication channels, sensor noise, or spatial alignment errors can have a system-wide impact.
 
-Prenndere spunto anche da qua: https://arxiv.org/pdf/2401.13964
+A first source of vulnerability lies in the communication process itself.
+Collaborative frameworks typically rely on exchanging intermediate feature maps or high-level detections, which can be tampered with during transmission or injected with adversarial perturbations.
+Unlike single-agent perception, where adversarial attacks affect only the targeted model, in a cooperative network compromised data can mislead multiple vehicles simultaneously.
+Recent work has begun to explore threat models for collaborative perception, including targeted feature-space perturbations, denial-of-service through excessive or malformed messages, and spoofed detections designed to misdirect planning modules \cite{wang2025rcdnrobustcamerainsensitivitycollaborative}.
 
+Another critical challenge is pose estimation error, which can misalign shared features and degrade the benefits of collaboration.
+Because spatial transformations are central to feature fusion, even small localisation errors can have a disproportionate impact on detection accuracy.
+Lu et al.\ \cite{lu2023robustcollaborative3dobject} showed that pose perturbations reduce 3D detection performance and proposed robust aggregation methods that account for uncertainty in spatial alignment.
+Similarly, Vadivelu et al.\ \cite{vadivelu2020learningcommunicatecorrectpose} addressed this issue by introducing an end-to-end framework that jointly estimates and corrects relative poses before message fusion, using a combination of regression, global consistency optimisation, and attention-based filtering to suppress unreliable messages.
 
-Propongono qualcosa per pose error in collaborative \cite{lu2023robustcollaborative3dobject}\cite{vadivelu2020learningcommunicatecorrectpose}
+Defensive strategies in this domain are still at an early stage.
+Some approaches aim to increase robustness to benign noise through data augmentation or uncertainty-aware fusion, while others explicitly estimate and correct transformation errors before feature aggregation.
+However, systematic defence against malicious adversaries in collaborative perception remains largely unexplored.
+This includes the need for authentication of messages, detection of inconsistent or implausible information, and resilience to compromised nodes in the network.
+
+Addressing these issues requires integrating robustness into both the perception and the communication layers, ensuring that cooperative gains are preserved even in the presence of noisy, incomplete, or adversarial inputs.
+
+\section{Evaluating the Impact of Adversarial Attacks in Collaborative Perception}
+
+While prior research has demonstrated a wide range of attack strategies against single-vehicle perception systems, the implications of such attacks in a collaborative setting remain less explored.
+Given that collaborative perception frameworks aggregate information from multiple agents, adversarial manipulations affecting a single participant can potentially influence the shared scene understanding of the entire network.
+
+In this work, we selected a representative class of attacks from the single-vehicle domain, focusing primarily on physical adversarial patch attacks targeting object detection models.
+These attacks are designed to modify the appearance of real-world objects in a way that misleads the perception system, either by suppressing valid detections or inducing false positives.
+
+Our approach was to introduce such perturbations into the perception inputs of a collaborative framework and observe how the model’s predictions were affected both for the attacked agent and for its collaborating peers.
+By comparing detection results across attack and non-attack conditions, we aimed to quantify:
+
+The direct impact on the targeted vehicle’s perception pipeline.
+
+The extent to which corrupted data propagated through the collaborative fusion process.
+
+Whether the model exhibited any inherent robustness due to redundancy in multi-agent observations.
+
+This evaluation provides a first step towards understanding the transferability of single-vehicle adversarial vulnerabilities to cooperative perception systems, and lays the groundwork for future studies on targeted defences in such multi-agent environments.
+

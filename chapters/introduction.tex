@@ -49,7 +49,7 @@ The result is that a skilled attacker can introduce false but convincing data in
 This kind of vulnerability highlights a core challenge in collaborative autonomy: while shared perception improves awareness, it also requires robust safeguards to ensure the trustworthiness of every contributing node in the network.
 
 A significant class of threats in the collaborative driving context involves adversarial attacks targeting the perception system. In these attacks, an adversary deliberately introduces subtle perturbations designed to mislead a vehicle’s sensors or machine learning models.
-Prior research has demonstrated that even advanced vision systems, including object detectors and traffic sign classifiers, can be deceived using physical adversarial patches. \cite{pmlr-v80-athalye18b} \cite{brown2018adversarialpatch} \cite{Chen_2019} \cite{goodfellow2015explainingharnessingadversarialexamples} \cite{szegedy2014intriguingpropertiesneuralnetworks} \cite{10.11453319535.3354259}
+Prior research has demonstrated that even advanced vision systems, including object detectors and traffic sign classifiers, can be deceived using physical adversarial patches \cite{pmlr-v80-athalye18b} \cite{brown2018adversarialpatch} \cite{Chen_2019} \cite{goodfellow2015explainingharnessingadversarialexamples} \cite{szegedy2014intriguingpropertiesneuralnetworks} \cite{10.11453319535.3354259}.
 These patches often take the form of printed stickers or patterns applied to stop signs, lane markers, or other features in the driving environment.
 To a human observer, such patches may appear as harmless graffiti or decorative elements. However, when processed by a vehicle’s camera and neural network, they can cause severe misinterpretations.
 For instance, a stop sign altered with an adversarial pattern might be classified as a speed limit sign or not recognized at all.
@@ -80,74 +80,62 @@ These questions aim to guide a comprehensive analysis of both the threat landsca
 
 \section{Contributing}
 
-Most V2X models have been trained and evaluated primarily on collected datasets, both in simulation environments such as those based on CARLA (for example, OPV2V\cite{xu2022opv2vopenbenchmarkdataset}),
-and in real-world scenarios, including datasets captured in various cities like DAIR-V2X\cite{DAIR-V2X2021} and nuScenes\cite{nuscenes2019}.
-
-However, there is a noticeable lack of literature exploring how these models perform in real-time, real-world conditions,
-particularly under standard operating modes without adversarial interference. To begin assessing the feasibility of deploying adversarial attacks in real-world contexts,
-it is essential to first establish a baseline understanding of how the model behaves in such settings and whether it is capable of achieving an adequate level of accuracy.
+Most V2X models have been trained and evaluated primarily on datasets collected either in simulated environments, such as those based on CARLA (for example, OPV2V\cite{xu2022opv2vopenbenchmarkdataset}), or in real-world scenarios, such as DAIR-V2X\cite{DAIR-V2X2021} and nuScenes\cite{nuscenes2019}.
+However, there is limited literature examining their behaviour in real-time, real-world conditions under standard operating modes without adversarial interference.
+Establishing this baseline is essential before assessing the feasibility of deploying adversarial attacks, as it provides a reference for understanding the models’ expected performance in non-perturbed scenarios.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/introduction/scale_car}
-    \caption{The scaled model of the car used during the testing, equipped with four cameras, two ArUco markers, and a proximity sensor.}
+    \caption{Scaled model of the car used during testing, equipped with four cameras, two ArUco markers, and a proximity sensor.}
     \label{scale-car}
 \end{figure}
 
 \subsection{Static Testing}
 
-By static testing, we refer to the evaluation of a model’s performance on a predefined set of images and input data required to run the model, without any adversarial interference, and collected either in real-world scenarios or controlled environments.
-These tests are defined as static because there was no real-time interaction between the model and the environment. The data were gathered using stationary vehicles positioned differently at each time step.
-The first test was conducted on a closed road circuit, where we could control the exact positions of the vehicles and external factors such as pedestrians and other vehicles.
-The second test was carried out indoors, in a closed environment using 1:20 scale models of cars [see Figure \ref{scale-car}] and road infrastructure. This setup allowed us to control all variables and minimize unwanted interference or noise.
-Two collaborative models were considered during the testing phase, CoBEVT \cite{xu2022cobevtcooperativebirdseye} and UniV2X \cite{yu2024_univ2x}, in order to gain practical insights into the behavior of these types of models.
+Static testing refers to evaluating a model on a fixed set of collected data, without real-time interaction.
+We performed two complementary static evaluations: the first on a closed road circuit with full control over vehicle positioning and environmental factors, and the second in an indoor setup using 1:20 scale vehicles and road infrastructure [see Figure \ref{scale-car}].
+This approach allowed for highly controlled conditions, minimising external variability and providing an initial reference point for model behaviour.
+Two collaborative perception models, CoBEVT\cite{xu2022cobevtcooperativebirdseye} and UniV2X\cite{yu2024_univ2x}, were selected for this phase to gain early practical insights into their capabilities.
 
 \subsubsection{UniV2X}
 
-UniV2X is an end-to-end cooperative autonomous driving framework that integrates all key driving modules, including perception, mapping, occupancy prediction, and planning. 
-It leverages both ego-vehicle and infrastructure sensor data through V2X communication to improve decision-making in complex driving environments. 
-Unlike existing approaches that focus on optimizing individual components, UniV2X adopts a unified learning strategy to enhance overall planning performance. 
-A key element of the framework is its sparse-dense hybrid data transmission and fusion mechanism, which supports efficient collaboration under real-world communication constraints. 
-Experimental results on the DAIR-V2X \cite{DAIR-V2X2021} dataset show that UniV2X outperforms several benchmark methods across both intermediate tasks and final planning accuracy, while maintaining strong interpretability and communication efficiency.
-
-\begin{figure}[ht]
-  \centering
-  \begin{minipage}[t]{0.48\linewidth}
-    \includegraphics[width=\linewidth,height=130pt]{figures/introduction/univ2x_infra.png}
-    \label{fig:univ2x_infra}
-  \end{minipage}\hfill
-  \begin{minipage}[t]{0.48\linewidth}
-    \includegraphics[width=\linewidth,height=130pt]{figures/introduction/univ2x_veh.png}
-    \label{fig:univ2x_veh}
-  \end{minipage}
-  \caption{Key frames used by the UniV2X cooperative perception model: infrastructure view (a) and vehicle view (b).}
-  \label{fig:univ2x_frames}
-\end{figure}
-
-
-Although the model was tested under various conditions and scenarios, it consistently failed to provide accurate predictions of nearby objects and their trajectories. 
-It also struggled to reliably detect lane markings. These limitations suggest a significant domain gap between the data used during training and the real-world data used in our tests, leading to poor generalization performance.
-
-Further experiments were conducted by altering and reusing data from the original training dataset, in an attempt to better align the test conditions with the model's expected input. 
-However, these tests were inconclusive. The model produced nearly identical outputs regardless of the input variations, indicating a lack of sensitivity to changes in the environment.
-
-Assuming that our input data were correct and well-formatted, this behavior points to the possibility that UniV2X is overfitted to its training data. 
-This would explain its inability to generalize to new scenes or unfamiliar conditions, which is a critical limitation for deployment in real-world dynamic environments.
-
-We attempted to contact the authors of the model to clarify details about the training dataset and to confirm whether our implementation pipeline was aligned with the intended usage. 
-Unfortunately, we did not receive a response, which limited our ability to further troubleshoot or validate our findings.
+UniV2X is an end-to-end cooperative autonomous driving framework integrating perception, mapping, occupancy prediction, and planning.
+It leverages vehicle–infrastructure collaboration through sparse-dense hybrid fusion to maintain planning accuracy under communication constraints.
+Despite its strong reported performance on DAIR-V2X, our preliminary observations indicated difficulties in accurately predicting object trajectories and detecting lane markings, suggesting a potential domain gap between training and test data.
 
 \subsubsection{CoBEVT}
 
-CoBEVT is a collaborative perception framework designed to enhance bird’s eye view (BEV) semantic segmentation through multi-agent, multi-camera systems. 
-Unlike traditional single-agent approaches, CoBEVT leverages Vehicle-to-Vehicle (V2V) communication to fuse visual data from multiple viewpoints and agents, effectively addressing challenges such as occlusion and limited perception range. 
-At the core of the framework is the Fused Axial Attention (FAX) module, which enables efficient spatial interaction modeling across views and agents within a Transformer-based architecture. 
-CoBEVT has demonstrated state-of-the-art performance on the OPV2V \cite{xu2022cobevtcooperativebirdseye} dataset and shows strong generalization capabilities across related tasks, including single-agent BEV segmentation and multi-agent 3D object detection.
+CoBEVT is a collaborative perception framework designed for bird’s eye view semantic segmentation in multi-agent, multi-camera settings.
+It fuses data from multiple vehicles via the Fused Axial Attention module to mitigate occlusions and extend perception range.
+Trained on OPV2V, CoBEVT has shown state-of-the-art performance in simulation, making it a relevant baseline for subsequent testing phases.
 
 \subsection{Dynamic Testing}
 
-Dynamic testing refers to the evaluation of a model’s performance in real time, where the model interacts with the environment and receives input data from sensors such as cameras, GPS, and IMU, while the vehicles are in motion.
+Dynamic testing introduced real-time interaction between the models and the environment, with vehicles in motion and continuous sensor input.
+Due to hardware and space constraints, these tests were conducted indoors using the same scale models and road setup from the static phase.
+Vehicle positions and orientations were tracked in real time using two ArUco markers per vehicle, enabling continuous localisation data as input to the models.
+While this setup introduced temporal dynamics absent in static tests, it remained limited in environmental diversity and scale.
 
-Due to hardware limitations and the lack of adequate space, dynamic tests were conducted exclusively in the indoor environment, using the same 1:20 scale models of cars [see Figure \ref{scale-car} ] and road infrastructure employed in the static tests. A ceiling-mounted camera was used to track the vehicles' movements and provide input data to the model.
+\subsection{Simulator Testing}
 
-Vehicle tracking was achieved by stitching data from two ArUco markers placed on the front and rear of each vehicle. This setup enabled the model to receive real-time coordinates (x, y, z) and orientation information.
+While dynamic testing provided valuable insights, the constraints of our indoor setup and the limited scale of the experiments restricted the range of conditions we could explore.
+In particular, hardware limitations and space constraints prevented us from replicating complex traffic scenarios, varying environmental conditions, or introducing a sufficient variety of cooperative agents.
+To overcome these limitations and gain a more complete understanding of the models’ behaviour, we moved to a simulation-based evaluation.
+
+Simulation offers a controlled and reproducible environment in which external factors can be systematically introduced, modified, and monitored.
+This makes it possible to isolate specific variables and replicate identical scenarios across multiple runs, which is essential for evaluating model stability and repeatability.
+
+For this stage of the study, we used CARLA\cite{Dosovitskiy17}, a widely recognised open-source simulator for autonomous driving research.
+CARLA provides a high-fidelity urban environment with dynamic traffic participants, pedestrians, detailed infrastructure, and configurable weather and lighting conditions.
+These features make it particularly well suited for testing collaborative perception models under both ideal and challenging scenarios.
+
+An additional advantage of using CARLA is its direct connection to our models of interest.
+It is the simulation engine used to generate the OPV2V dataset\cite{xu2022opv2vopenbenchmarkdataset}, which was employed for training CoBEVT.
+This alignment between training and testing domains reduces part of the domain gap observed in our real-world evaluations, allowing a fairer assessment of the model’s nominal performance before introducing any adversarial perturbations.
+
+By leveraging CARLA’s scenario control tools, we were able to vary parameters such as sensor placement, number and distribution of cooperating agents, occlusion patterns, and environmental conditions.
+These experiments provided detailed insights into how each model processes shared visual information, how fusion strategies adapt to partial or noisy inputs, and how performance changes under controlled disturbances.
+This simulation phase therefore served as a bridge between the highly variable real-world conditions and the idealised datasets used for training, highlighting the factors most critical to achieving operational robustness.
+
+SCRIVERE CHE CALRA CI DA UNA GT IN MANIERA FACILE PER FARE CONFRONTO TRA IOU PATCHATO E NON?
