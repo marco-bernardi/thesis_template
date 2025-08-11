@@ -13,6 +13,20 @@ Studying both categories allows us to analyse the difference between physical-wo
 In particular, human understandable attacks are relevant for real-world deployment scenarios, while non-human understandable attacks target the algorithmic vulnerabilities of the perception models themselves.
 Evaluating both provides a broader view of the potential attack surface.
 
+\section{Experimental Procedure}
+
+Each experiment run followed a consistent sequence to ensure reproducibility and comparability of results:
+
+\begin{enumerate}
+    \item \textbf{Area Selection} - Identify the target area for the attack (e.g., an intersection, a straight road segment, or a merging lane).
+    \item \textbf{Spawn Point Definition} - Select four points surrounding this area as the starting locations for the vehicles.
+    \item \textbf{Baseline Recording} - Start the simulation and capture 10 seconds of frames while the vehicles operate under CARLA’s autopilot, following the predefined blueprints embedded in the map by the CARLA authors.
+    \item \textbf{Condition Variation} - Repeat the test on the same map with or without the adversarial patch, or switch to a different map to evaluate alternative scenarios.
+\end{enumerate}
+
+This procedure guarantees that vehicles follow exactly the same trajectories in each run, with the only difference between runs being the presence or absence of the adversarial patch.
+
+
 \section{Human Understandable Attacks}
 
 In our work, human understandable attacks focus on manipulating the physical environment to deceive perception systems.
@@ -67,8 +81,19 @@ This choice of metric allowed us to quantify the extent to which the patch alter
 
 \subsection{Patch Generator}
 
-For this category, we developed an adversarial patch generator in a \textit{black-box} setting, optimising solely based on the perception system’s output without access to its internal parameters.
-The generator was a compact convolutional neural network (CNN) suitable for iterative optimisation.
+In this category, we designed an adversarial patch generator operating in a \textit{black-box} setting, optimising its output solely based on the perception system’s responses, without access to its internal parameters or gradients.  
+The generator was implemented as a compact convolutional neural network (CNN), chosen for its balance between expressive capacity and computational efficiency, making it well-suited for iterative optimisation procedures.
+
+The model received as input a \(128 \times 128\) pixel crop extracted from the original front camera frame, together with the coordinates of the patch’s intended location within the frame.  
+The coordinates were represented as a tuple \((x, y)\), where \(x\) and \(y\) correspond to the pixel coordinates of the patch’s top-left corner.  
+Incorporating the spatial coordinates into the input was crucial to avoid overfitting the generator to a single fixed location, thereby improving its ability to generalise to different placements of the patch within the scene (see Fig.~\ref{fig:patch_generator}).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{figures/attacks_framework/patch_generator_graph.jpg}
+    \caption{Adversarial patch generator architecture}
+    \label{fig:patch_generator}
+\end{figure}
 
 \subsubsection{Training Objective and Process}
 

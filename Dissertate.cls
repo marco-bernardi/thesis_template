@@ -217,8 +217,8 @@
 	\pagenumbering{roman}
 	\input{frontmatter/personalize}
 	\maketitle
-	\frontispiece
-	\dedicationpage
+	%\frontispiece
+	%\dedicationpage
 	\abstractpage
 	\tableofcontents
 	\phantomsection
