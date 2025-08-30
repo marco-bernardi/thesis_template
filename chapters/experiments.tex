@@ -71,19 +71,79 @@ Two different versions of this scenario were considered, each characterized by a
 
 \paragraph{Version 1.}  
 In the first configuration, a single patch was positioned on the right-hand side of the road, specifically on the grassy area adjacent to the lane.  
-This placement ensured that the patch remained constantly visible to the vehicles approaching along the correct direction of travel, while avoiding any interference with the physical integrity of the roadway or the guard rail.  
+This placement ensured that the patch remained constantly visible to the vehicles approaching along the correct direction of travel, while avoiding any interference with the physical integrity of the roadway or the guard rail (Figure~\ref{fig:scenario_straight_road}).  
+
 The goal of this setup was to test the ability of a single peripheral perturbation to distort the perception of the ego vehicle and its collaborators, thereby evaluating the extent to which even non-central adversarial artifacts can alter decision-making.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/experiments/scenario1_v1.png}
+    \caption{Scenario 1 Version 1: Straight Road. The ego vehicle (red) is approaching the vertical patch on the left side of the road, while Car1 (blue) is near the horizontal patch on the right side.}
+    \label{fig:scenario_straight_road}
+\end{figure}
 
 \paragraph{Version 2.}  
 In the second configuration, two patches were simultaneously deployed, one on the left-hand side and one on the right-hand side of the road.  
-The left patch was placed on the unused left lane in order to prevent conflicts with physical traffic flow, while still ensuring visibility to the ego vehicle and other agents. The right patch was maintained in the grassy area, analogous to Version~1.  
+The left patch was placed on the unused left lane in order to prevent conflicts with physical traffic flow, while still ensuring visibility to the ego vehicle and other agents. The right patch was maintained in the grassy area, analogous to Version~1 (Figure~\ref{fig:scenario_straight_road_v2}).  
 This arrangement allowed for the examination of cumulative or synergistic effects resulting from the presence of multiple adversarial perturbations within the visual field of the vehicles. The dual-sided placement further increased the likelihood of misperceptions, such as sudden braking or trajectory deviations, with potentially severe implications in dense traffic conditions.
 
 Overall, Scenario~1 provided a controlled experimental setting in which to study the isolated and combined impact of adversarial patches on vehicle perception in a straightforward linear road context.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/experiments/scenario1.png}
-    \caption{Scenario 1: Straight Road. The ego vehicle (red) is approaching the vertical patch on the left side of the road, while Car1 (blue) is near the horizontal patch on the right side.}
-    \label{fig:scenario_straight_road}
+    \includegraphics[width=0.7\textwidth]{figures/experiments/scenario1_v2.png}
+    \caption{Scenario 1 Version 2: Straight Road. The ego vehicle (red) is approaching the vertical patch on the left side of the road, while Car1 (blue) is near the horizontal patch on the right side.}
+    \label{fig:scenario_straight_road_v2}
+\end{figure}
+
+\subsection{Scenario 2: Intersection Setting}
+
+A second experimental scenario was designed at a four–lane intersection within the Town06 environment.  
+Unlike the straight road setting of Scenario~1, intersections introduce additional complexity in terms of visibility and occlusion. Indeed, one of the critical issues observed during preliminary tests was that adversarial patches placed at a significant distance across the intersection were often not perceived simultaneously by vehicles approaching from different directions. This limitation reduced the overall effectiveness of the attack, as the patches did not consistently fall within the field of view of the cameras.  
+
+To overcome this problem, patches were repositioned closer to the vehicles, ensuring that at least one of the agents would perceive them clearly. The experimental design considered horizontal patches applied in three alternative configurations:  
+\begin{enumerate}
+    \item A \textit{frontal horizontal patch}, corresponding to the rear view of a simulated vehicle.  
+    \item A \textit{rear horizontal patch}, corresponding to the frontal view of a simulated vehicle.  
+    \item A \textit{combined configuration}, where both frontal and rear patches were simultaneously deployed.  
+\end{enumerate}
+
+The following cases were implemented:
+
+\paragraph{Version 1.}  
+The ego vehicle approached the intersection from the west, driving along a four–lane road, while \textit{Car1} approached from the north in the rightmost lane.  
+A rear–oriented patch was positioned directly in front of Car1 at the intersection (Figure~\ref{fig:scenario_intersection_case1}). In this configuration, the ego vehicle did not perceive the patch due to its placement, whereas Car1 was directly exposed to it. The case allowed an evaluation of selective perception, in which adversarial artifacts affected only a subset of agents.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/experiments/scenario2_v1.png}
+    \caption{Scenario 2 Case 1: Intersection with Rear–Oriented Patch. The ego vehicle (red) is approaching the intersection from the west, while Car1 (blue) is approaching from the north. The rear–oriented patch is positioned in front of Car1.}
+    \label{fig:scenario_intersection_case1}
+\end{figure}
+
+\paragraph{Version 2.}  
+In the second configuration, the ego vehicle again approached from the west. Car1, instead, traveled southward from the northern side of the intersection. A front–oriented patch was placed in the southwestern quadrant of the intersection, aligned such that Car1 perceived it through its rear–facing camera (Figure~\ref{fig:scenario_intersection_case2}).  
+For the ego vehicle, however, the visual appearance of the patch was meaningless or inconsistent, thus testing the scenario in which only one of the collaborating agents provided distorted information to the ego.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/experiments/scenario2_v2.png}
+    \caption{Scenario 2 Case 2: Intersection with Front–Oriented Patch. The ego vehicle (red) is approaching the intersection from the west, while Car1 (blue) is approaching from the north. The front–oriented patch is positioned in the southwestern quadrant of the intersection.}
+    \label{fig:scenario_intersection_case2}
+\end{figure}
+
+\paragraph{Version 3.}  
+The third case employed three distinct patches simultaneously, creating the perceptual illusion of a dense traffic condition or even a “wall” of vehicles. The configuration was as follows:  
+\begin{itemize}
+    \item \textbf{Patch 1 (rear–oriented):} positioned so that Car2 perceived it as a vehicle directly in front.  
+    \item \textbf{Patch 2 (lateral or rear–oriented):} configured either for the ego vehicle to perceive it as a lateral vehicle or, alternatively, for Car3 to perceive it as a vehicle in its rear view.  
+    \item \textbf{Patch 3 (front–oriented):} positioned for Car1 to perceive it as a vehicle behind.  
+\end{itemize}  
+This multi–patch arrangement allowed the study of more complex dynamics in which multiple agents simultaneously received inconsistent or misleading visual cues, thereby amplifying the disruptive potential of the adversarial attack in collaborative perception contexts (Figure~\ref{fig:scenario_intersection_case3}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/experiments/scenario2_v3.png}
+    \caption{Scenario 2 Case 3: Intersection with Multiple Patches. The ego vehicle (red) is approaching the intersection from the west, while Car1 (blue) is approaching from the north. Multiple patches are positioned to create the illusion of dense traffic.}
+    \label{fig:scenario_intersection_case3}
 \end{figure}
