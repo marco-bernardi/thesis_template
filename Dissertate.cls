@@ -72,6 +72,8 @@
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \usepackage{siunitx}
+\usepackage{tabularx}
+\usepackage{pdflscape}
 
 % Fonts.
 \RequirePackage{color}
