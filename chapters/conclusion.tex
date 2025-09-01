@@ -1,4 +1,46 @@
 %!TEX root = ../dissertation.tex
 \chapter{Conclusion}
-\label{conclusion}
-The conclusion goes here.
+\label{chap:conclusion}
+
+\section{Summary}
+This thesis examined the effect of physical adversarial patches on collaborative multi-vehicle perception. The evaluation covered multiple scenarios, patch counts, and orientations, measuring segmentation overlap (IoU) and per-object error (MACE) for ego and cooperating vehicles. The protocol combined aggregated statistics with per-run variance and qualitative evidence.
+
+\section{Empirical Findings}
+\begin{enumerate}
+    \item Patch impact depends on scene observability. With few vehicles and long-range targets, baseline recall is weak; patches can act as salient cues that raise detections, increasing IoU and reducing MACE (Scenario~2 V1).
+    \item Collaboration dilutes patch influence on overlap. As vehicle count grows, IoU for GT, V1, and V2 converges (Scenario~1), indicating that multi-view redundancy suppresses patch-driven overlap shifts.
+    \item Geometry degrades under clutter. At higher vehicle counts (Scenario~1 with five vehicles) patched MACE rises, exposing localization instability even when IoU remains near GT.
+    \item Patch multiplicity is non-monotonic. A single patch can improve recall in range-limited scenes; additional patches may introduce confusion (V2) and, at higher counts (V3), yield pronounced degradation in both IoU and MACE.
+    \item Orientation matters. Horizontal patches deliver stronger cues than vertical ones in comparable layouts (Scenario~3 vs.~Scenario~2 V1).
+    \item Propagation is visibility-gated. Agents outside the attack region or with occluded views remain largely unaffected (Scenario~5, CAV3), and missed observations drive MACE to its upper bound via absent boxes.
+\end{enumerate}
+
+\section{Answers to the Research Questions}
+\textbf{RQ1.} Vulnerabilities in single-vehicle models persist but are modulated by collaboration. IoU degradations seen in sparse, long-range settings are reduced when additional viewpoints are available; failure modes shift toward geometric error under crowding. 
+
+\textbf{RQ2.} Physical patches scale with context rather than count. Single patches can boost recall in range-limited scenes; added patches do not linearly increase effect and can flip outcomes from improvement to degradation, introducing new risks from cue conflict near shared targets.  
+
+\textbf{RQ3.} The impact of a compromised vehicle is bounded by multi-view evidence. When other agents view the same object, disagreement reduces IoU drift; when they do not (distance/occlusion), errors persist locally and appear as saturated MACE due to missed detections.  
+
+\textbf{RQ4.} The most susceptible stages are front-end detection and early feature sharing. Patch cues alter local detections before fusion; downstream fusion benefits from redundancy but cannot correct objects that no agent observes.  
+
+\textbf{RQ5.} Benchmarking should pair IoU and MACE with deltas to GT and per-run dispersion. IoU captures overlap sensitivity; MACE captures localization robustness and exposes missed detections. Together they resolve recall-driven gains from true geometric accuracy and quantify resilience across fusion settings.
+
+\section{Limitations}
+Scenario coverage is finite; distances, occlusions, and placements do not span the full operational envelope. Patch designs are constrained to a small family and two orientations. Metrics are limited to IoU and MACE; semantic and temporal stability are not separately scored. Real-world dynamics such as illumination, motion blur, and weather remain partially controlled. Additionally, the underlying perception model is imperfect and exhibits unstable behavior, which makes it difficult to obtain results that consistently align with the qualitative detection outputs; some runs yield meaningful patterns, while others are dominated by noise.
+
+\section{Implications}
+Collaborative perception is not uniformly vulnerable or uniformly robust. Redundant viewpoints mitigate overlap drift but can mask localization brittleness. Patch design, placement, orientation, and scene range govern attack efficacy more than raw patch count. Robustness claims must be stated per scenario and per operating regime.
+
+\section{Future Work}
+Extend patches to temporally coherent patterns and optimize for multi-view conflict. Evaluate additional fusion strategies and calibrate trust across agents based on view geometry and agreement. Add metrics for recall/precision, temporal consistency, and cross-agent consensus. Validate under broader environmental conditions and with real-vehicle experiments.
+
+\section{Closing}
+The results draw a precise picture: collaboration suppresses some patch effects while exposing others. 
+Attack efficacy is conditional, visibility-gated, and orientation-sensitive. 
+At the current stage of collaborative perception, systems remain vulnerable to adversarial patches and can be exploited with limited system knowledge. 
+The absence of a stable, robust perception model prevents definitive conclusions and produces noisy, inconsistent outcomes. 
+The state of the art in collaboration has not eliminated adversarial vulnerabilities. 
+Resilience scales with viewpoint redundancy: collaboration is effective with a sufficiently large platoon, whereas small platoons remain disproportionately susceptible. 
+While we demonstrated the potential harm of adversarial patches, with the current model we could not conditionally induce BEV detections at specified positions as envisioned in the threat model; 
+instead, patch-induced artifacts appeared at inconsistent, often random locations.
