@@ -161,8 +161,7 @@ An additional advantage of using CARLA is its direct connection to our models of
 It is the simulation engine used to generate the OPV2V dataset\cite{xu2022opv2vopenbenchmarkdataset}, which was employed for training CoBEVT.
 This alignment between training and testing domains reduces part of the domain gap observed in our real-world evaluations, allowing a fairer assessment of the model’s nominal performance before introducing any adversarial perturbations.
 
-By leveraging CARLA’s scenario control tools, we were able to vary parameters such as sensor placement, number and distribution of cooperating agents, occlusion patterns, and environmental conditions.
-These experiments provided detailed insights into how each model processes shared visual information, how fusion strategies adapt to partial or noisy inputs, and how performance changes under controlled disturbances.
-This simulation phase therefore served as a bridge between the highly variable real-world conditions and the idealised datasets used for training, highlighting the factors most critical to achieving operational robustness.
-
-SCRIVERE CHE CALRA CI DA UNA GT IN MANIERA FACILE PER FARE CONFRONTO TRA IOU PATCHATO E NON?
+By leveraging CARLA’s scenario-control framework, we systematically varied sensor placement, the number and spatial distribution of cooperating agents, occlusion patterns, and environmental conditions. 
+These experiments yielded detailed evidence on how each model processes shared visual information, how fusion strategies adapt to partial or noisy inputs, and how performance degrades under controlled perturbations. 
+This simulation phase thus bridged the gap between highly variable real-world conditions and the idealized training datasets, isolating the factors most critical to operational robustness. 
+In addition, CARLA provides high-fidelity geometric and semantic ground truth through its native interfaces, enabling rigorous comparisons of Intersection over Union (IoU) between adversarially patched and baseline (unpatched) conditions, both at the instance level and when aggregated across sequences.
