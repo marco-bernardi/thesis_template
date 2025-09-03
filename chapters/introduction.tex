@@ -9,7 +9,34 @@ In theory, these vehicles can outperform human drivers by reacting faster withou
 However, the reality shows these systems still have flaws. Self-driving cars sometimes make perception errors that lead to incorrect decisions with serious consequences.
 Take the widely reported fatal crash where an autonomous vehicle detected a highway divider but mistakenly classified it as non-threatening, contributing to the accident.
 Such incidents underscore the critical importance of reliable perception, as autonomous vehicles must accurately interpret their surroundings to ensure safety.
-Yet single-vehicle perception systems have inherent limitations, pointing to the need for more robust approaches
+Yet, single-vehicle perception systems have inherent limitations, highlighting the need for more robust approaches such as collaborative perception.
+
+\section{SAE Levels of Driving Automation}
+
+The Society of Automotive Engineers (SAE) has established a widely adopted taxonomy to classify the progressive stages of driving automation. This taxonomy, codified in SAE J3016, is a descriptive convention that standardizes terminology across engineering, policy, and legal discourse. It distinguishes between driver support features and automated driving system (ADS) features, clarifies the allocation of roles for the human user and the ADS in performing the dynamic driving task (DDT), and provides a common reference for comparing capabilities and limitations \cite{SAEJ3016_2021}.
+
+\paragraph{Scope and terminology.}
+SAE levels apply to the engaged feature or features at a given time rather than to a vehicle model in the abstract. Levels 0 through 2 are driver support features where the human user monitors the driving environment. Levels 3 through 5 are ADS features that perform the entire DDT within an operational design domain, with differing responsibilities for fallback and minimal risk conditions \cite{SAEJ3016_2021}.
+
+\begin{enumerate}
+    \item \textbf{Level 0: No Driving Automation.}
+    The human driver performs the entire DDT at all times. Active safety systems may provide momentary interventions, yet no sustained lateral or longitudinal control is automated \cite{SAEJ3016_2021}.
+
+    \item \textbf{Level 1: Driver Assistance.}
+    A driver support feature provides continuous assistance in either lateral control or longitudinal control. The human driver monitors the environment and executes the remainder of the DDT \cite{SAEJ3016_2021}.
+
+    \item \textbf{Level 2: Partial Driving Automation.}
+    A driver support feature provides sustained assistance in both lateral and longitudinal control under specified conditions. The human driver continuously supervises the driving environment and remains responsible for immediate intervention \cite{SAEJ3016_2021}.
+
+    \item \textbf{Level 3: Conditional Driving Automation.}
+    An ADS performs the entire DDT within a defined operational design domain, including environmental monitoring. The human user is not required to monitor the environment but must be available to resume control upon a takeover request \cite{SAEJ3016_2021}.
+
+    \item \textbf{Level 4: High Driving Automation.}
+    An ADS performs the entire DDT within its operational design domain without expecting human intervention and achieves a minimal risk condition if it cannot continue. No human fallback is required within the domain \cite{SAEJ3016_2021}.
+
+    \item \textbf{Level 5: Full Driving Automation.}
+    An ADS performs the entire DDT under all roadway and environmental conditions that a competent human driver could manage. No human driver is required at any time \cite{SAEJ3016_2021}.
+\end{enumerate}
 
 \section{Collaborative Perception in Connected Vehicles}
 Individual vehicles face perception constraints from their sensors' limited field of view and range. Two major challenges stand out: occlusion (when objects are blocked from view) and restricted sensor range. Occlusion happens constantly in traffic, as a pedestrian might be hidden behind another vehicle, invisible to an approaching autonomous car's cameras or LiDAR.

@@ -8,8 +8,8 @@ Metrics target segmentation overlap and geometric error: Intersection over Union
 IoU captures patch-induced degradation in overall overlap but is highly sensitive to small shifts in predicted boxes.
 MACE is more robust to minor localization errors because it averages per-object absolute errors and does not scale with box size.
 
-The chapter first states the evaluation protocol/datasets, scenario composition, vehicle counts, patch versions, and run structure—then reports quantitative results using hierarchical tables that group metrics by family (IoU, MACE) and variant (GT, V1, V2). 
-Aggregates are complemented by per-run breakdowns to expose variance. Qualitative analyses follow to diagnose typical success and failure modes, linking visual evidence to the quantitative trends (e.g., degradation under occlusion, class confusion on dynamic objects, and stability under patch interventions). 
+The chapter first states the evaluation protocol/datasets, scenario composition, vehicle counts, patch versions, and run structure—then reports quantitative results using hierarchical tables that group metrics by family (IoU, MACE) and variant (GT, V1, V2).
+Aggregates are complemented by per-run breakdowns to expose variance. Qualitative analyses follow to diagnose typical success and failure modes, linking visual evidence to the quantitative trends (e.g., degradation under occlusion, class confusion on dynamic objects, and stability under patch interventions).
 The chapter closes with a synthesis of observed effects and their implications for deployment.
 
 \section{Quantitative Results}
@@ -27,338 +27,369 @@ Conversely, once the scene reaches the 5-vehicle configuration, patched MACE ris
 Across configurations, using more patches (V2\,>\,V1) strengthens the attack.
 See the qualitative examples in section~\ref{sec:qualitative_results}.
 
-\begin{table}[h]
+\begin{table}[tph]
     \caption{Quantitative results of Scenario 1.}
     \label{tab:scenario1_results}
     \begin{tabularx}{\textwidth}{l c c c *{7}{X}}
         \toprule
-            &             &   \multicolumn{2}{c}{\textbf{Patch No}}  & \multicolumn{3}{c}{\textbf{IoU}} & \multicolumn{3}{c}{\textbf{MACE}}                            \\
+                         &             & \multicolumn{2}{c}{\textbf{Patch No}} & \multicolumn{3}{c}{\textbf{IoU}} & \multicolumn{3}{c}{\textbf{MACE}}                                               \\
         \cmidrule(lr){5-7}\cmidrule(lr){8-10}
-        \textbf{Ego}           &
-        \textbf{Veh. No}       & \textbf{V1}      & \textbf{V2}      &
-        \textbf{GT}            & \textbf{V1} & \textbf{V2} &
-        \textbf{GT}            & \textbf{V1} & \textbf{V2}                                                                                                           \\
+        \textbf{Ego}     &
+        \textbf{Veh. No} & \textbf{V1} & \textbf{V2}                           &
+        \textbf{GT}      & \textbf{V1} & \textbf{V2}                           &
+        \textbf{GT}      & \textbf{V1} & \textbf{V2}                                                                                                                                                \\
         \midrule % Scenario 1 V1 
-        ego         & 2  & 1 & 2 & 0.434125 & 0.392342 & 0.350298 & 0,944444 & 0,666666 & 0,648148 \\
-        cav1        & 2  & 1 & 2 & 0.444556 & 0.406980 & 0.408431 & 0,944444 & 0,686274 & 0,666666 \\
+        ego              & 2           & 1                                     & 2                                & 0.4341                            & 0.3923 & 0.3502 & 0,9444 & 0,6666  & 0,6481 \\
+        cav1             & 2           & 1                                     & 2                                & 0.4445                            & 0.4069 & 0.4084 & 0,9444 & 0,6862  & 0,6666 \\
         \midrule
-        ego         & 4  & 1 & 2 & 0.490883 & 0.452349  & 0.461428 & 0,964285 & 0,821428 & 0,857142 \\
-        cav1        & 4  & 1 & 2 & 0.463163 & 0.433023  & 0.444251 & 1 & 0,821428 & 0,785714 \\
-        cav2        & 4  & 1 & 2 & 0 & 0 & 0 & 1 & 1 & 1 \\
-        cav3        & 4  & 1 & 2 & 0.468263 & 0.438388  & 0.441273 & 0,964285 & 0,928571 & 0,857142 \\
+        ego              & 4           & 1                                     & 2                                & 0.4908                            & 0.4523 & 0.4614 & 0,9642 & 0,8214  & 0,8571 \\
+        cav1             & 4           & 1                                     & 2                                & 0.4631                            & 0.4330 & 0.4442 & 1      & 0,8214  & 0,7857 \\
+        cav2             & 4           & 1                                     & 2                                & 0                                 & 0      & 0      & 1      & 1       & 1      \\
+        cav3             & 4           & 1                                     & 2                                & 0.4682                            & 0.4383 & 0.4412 & 0,9642 & 0,9285  & 0,8571 \\
         \midrule
-        ego         & 5  & 1 & 2 & 0.443152 & 0.448906  & 0.446386 & 0,363636 & 0,434782 & 0,5 \\
-        cav1        & 5  & 1 & 2 & 0.378647 & 0.378442  & 0.375645 & 0 & 0,0434782 & 0,045454 \\
-        cav2        & 5  & 1 & 2 & 0 & 0 & 0 & 1 & 0 & 1 \\
-        cav3        & 5  & 1 & 2 & 0.410901 & 0.406527  & 0.406404 & 0,045454 & 0,130434 & 0,136363 \\
-        cav4        & 5  & 1 & 2 & 0.369285 & 0.367004  & 0.364875 & 0,636364 & 0,695652 & 0,590909 \\
+        ego              & 5           & 1                                     & 2                                & 0.4431                            & 0.4489 & 0.4463 & 0,3636 & 0,4347  & 0,5    \\
+        cav1             & 5           & 1                                     & 2                                & 0.3786                            & 0.3784 & 0.3756 & 0      & 0,04347 & 0,0454 \\
+        cav2             & 5           & 1                                     & 2                                & 0                                 & 0      & 0      & 1      & 0       & 1      \\
+        cav3             & 5           & 1                                     & 2                                & 0.4109                            & 0.4065 & 0.4064 & 0,0454 & 0,1304  & 0,1363 \\
+        cav4             & 5           & 1                                     & 2                                & 0.3692                            & 0.3670 & 0.3648 & 0,6363 & 0,6956  & 0,5909 \\
         \bottomrule
     \end{tabularx}
 \end{table}
-
 Scenario~2 (V1) results in Table~\ref{tab:scenario2v1_results} exhibit a counterintuitive pattern: both IoU and MACE improve under patching across all configurations.
 A plausible mechanism is range-limited perception: although vehicles lie within the nominal \(\approx 50\,\mathrm{m}\) sensing range, the baseline frequently misses them at this distance, depressing IoU and inflating MACE via false negatives.
 Patches placed near the vehicles introduce salient, class-consistent cues that increase recall, which in turn raises IoU and lowers MACE.
 These gains reflect eased detection rather than improved localization; when detections are already reliable, patches do not yield similar benefits and can degrade geometric accuracy.
-
-\sloppy
-
-\begin{table}[H]
+\begin{table}[tph]
     \centering
     \caption{Quantitative results of Scenario 2 V1.}
     \label{tab:scenario2v1_results}
     \begin{tabularx}{\textwidth}{l c c *{4}{X}}
         \toprule
-            &             &   \multicolumn{1}{c}{\textbf{Patch No}}  & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                            \\
+                         &             & \multicolumn{1}{c}{\textbf{Patch No}} & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                   \\
         \cmidrule(lr){4-5}\cmidrule(lr){6-7}
-        \textbf{Ego}           &
-        \textbf{Veh. No}       &
+        \textbf{Ego}     &
+        \textbf{Veh. No} &
         \textbf{V1}      &
-        \textbf{GT}            & \textbf{V1}  &
-        \textbf{GT}            & \textbf{V1}  \\
+        \textbf{GT}      & \textbf{V1} &
+        \textbf{GT}      & \textbf{V1}                                                                                                                                  \\
         \midrule % Scenario 1 V1 
-        ego        & 2  & 1 & 0,147283 & 0,401974 & 1,701754 & 0,818181 \\
-        cav1         & 2  & 1 & 0,168303 & 0,458258 & 1,754385 & 0,909090 \\
+        ego              & 2           & 1                                     & 0,1472                           & 0,4019                            & 1,7017 & 0,8181 \\
+        cav1             & 2           & 1                                     & 0,1683                           & 0,4582                            & 1,7543 & 0,9090 \\
         \midrule
-        ego        & 4  & 1 & 0,330278 & 0,34911 & 1,321428 & 0,206896  \\
-        cav1         & 4  & 1 & 0,389344 & 0,491787 & 1,607142 & 0,896551 \\
-        cav2        & 4  & 1 & 0,333375 & 0,467423 & 1,607142 & 0,724137 \\
-        cav3        & 4  & 1 & 0,371549 & 0,422417 & 1,75 & 0,241379 \\
+        ego              & 4           & 1                                     & 0,3302                           & 0,3491                            & 1,3214 & 0,2069 \\
+        cav1             & 4           & 1                                     & 0,3893                           & 0,4918                            & 1,6071 & 0,8966 \\
+        cav2             & 4           & 1                                     & 0,3333                           & 0,4674                            & 1,6071 & 0,7241 \\
+        cav3             & 4           & 1                                     & 0,3715                           & 0,4224                            & 1,75   & 0,2414 \\
         \bottomrule
     \end{tabularx}
 \end{table}
-
 Scenario 2 (V2) results in Table~\ref{tab:scenario2v2_results} continue to demonstrate the unexpected behavior of performance metrics under patching.
 Here, IoU slightly decreases with patches, while MACE increases, indicating that the additional patch does not enhance detection as effectively as in V1.
 This suggests that the second patch may introduce confusion or redundancy, failing to provide the same saliency cues as the first.
-
-\begin{table}[H]
+\begin{table}[tph]
     \centering
     \caption{Quantitative results of Scenario 2 V2.}
     \label{tab:scenario2v2_results}
     \begin{tabularx}{\textwidth}{l c c *{4}{X}}
         \toprule
-            &             &   \multicolumn{1}{c}{\textbf{Patch No}}  & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                            \\
+                         &             & \multicolumn{1}{c}{\textbf{Patch No}} & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                   \\
         \cmidrule(lr){4-5}\cmidrule(lr){6-7}
-        \textbf{Ego}           &
-        \textbf{Veh. No}       &
+        \textbf{Ego}     &
+        \textbf{Veh. No} &
         \textbf{V1}      &
-        \textbf{GT}            & \textbf{V1}  &
-        \textbf{GT}            & \textbf{V1}  \\
+        \textbf{GT}      & \textbf{V1} &
+        \textbf{GT}      & \textbf{V1}                                                                                                                                  \\
         \midrule % Scenario 1 V1 
-        ego        & 2  & 1 & 0,237178 & 0,235517 & 1,846153 & 1,788461 \\
-        cav1         & 2  & 1 & 0,228761 & 0,226317 & 1,846153 & 1,788461 \\
+        ego              & 2           & 1                                     & 0,2371                           & 0,2355                            & 1,8462 & 1,7885 \\
+        cav1             & 2           & 1                                     & 0,2287                           & 0,2263                            & 1,8462 & 1,7885 \\
         \midrule
-        ego        & 4  & 1 & 0,444751 & 0,445319 & 0,607142 & 0,538461 \\
-        cav1        & 4  & 1 & 0,348163 & 0,342524 & 1,464285 & 1,307692 \\
-        cav2        & 4  & 1 & 0,34278 & 0,339024 & 1,75 & 1,615384 \\
-        cav3        & 4  & 1 & 0,288478 & 0,293656 & 1,285714 & 1,230769 \\
+        ego              & 4           & 1                                     & 0,4447                           & 0,4453                            & 0,6071 & 0,5384 \\
+        cav1             & 4           & 1                                     & 0,3481                           & 0,3425                            & 1,4642 & 1,3076 \\
+        cav2             & 4           & 1                                     & 0,3428                           & 0,3390                            & 1,75   & 1,6154 \\
+        cav3             & 4           & 1                                     & 0,2885                           & 0,2937                            & 1,2857 & 1,2308 \\
         \bottomrule
     \end{tabularx}
 \end{table}
-
 Scenario 2 (V3) results in Table~\ref{tab:scenario2v3_results} with three patches show a more pronounced degradation in both IoU and MACE compared to V1 and V2.
 MACE increases significantly, indicating that the model struggles more with false positives and negatives in this configuration.
 Placing 3 patches in close proximity to the vehicles may create conflicting cues, leading to increased ambiguity and misclassification.
-
-\begin{table}[H]
+\begin{table}[tph]
     \centering
     \caption{Quantitative results of Scenario 2 V3.}
     \label{tab:scenario2v3_results}
     \begin{tabularx}{\textwidth}{l c c *{4}{X}}
         \toprule
-            &             &   \multicolumn{1}{c}{\textbf{Patch No}}  & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                            \\
+                         &             & \multicolumn{1}{c}{\textbf{Patch No}} & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                   \\
         \cmidrule(lr){4-5}\cmidrule(lr){6-7}
-        \textbf{Ego}           &
-        \textbf{Veh. No}       &
+        \textbf{Ego}     &
+        \textbf{Veh. No} &
         \textbf{V1}      &
-        \textbf{GT}            & \textbf{V1}  &
-        \textbf{GT}            & \textbf{V1}  \\
+        \textbf{GT}      & \textbf{V1} &
+        \textbf{GT}      & \textbf{V1}                                                                                                                                  \\
         \midrule
-        ego         & 4  & 3 & 0,34429 & 0,354267 & 0,185185 & 1,607142 \\
-        cav1        & 4  & 3 & 0,372498 & 0,397867 & 0,037037 & 1,678571 \\
-        cav2        & 4  & 3 & 0,357346 & 0,364079 & 0,074074 & 1,821428 \\
-        cav3        & 4  & 3 & 0,349664 & 0,366236 & 0,296296 & 1,714285 \\
+        ego              & 4           & 3                                     & 0,3442                           & 0,3542                            & 0,1851 & 1,6071 \\
+        cav1             & 4           & 3                                     & 0,3724                           & 0,3978                            & 0,0370 & 1,6785 \\
+        cav2             & 4           & 3                                     & 0,3573                           & 0,3640                            & 0,0740 & 1,8214 \\
+        cav3             & 4           & 3                                     & 0,3496                           & 0,3662                            & 0,2962 & 1,7142 \\
         \bottomrule
     \end{tabularx}
 \end{table}
-
-Scenario~3 mirrors Scenario~2 (V1) with a single change: the patch is vertical rather than horizontal. 
-In Scenario~2 (V1), patching yielded marked gains: higher IoU and lower MACE. 
-In Scenario~3, these effects are attenuated: the deltas between patched variants and GT are smaller, and in several configurations performance under patching is slightly worse (IoU marginally lower, MACE marginally higher). 
+Scenario~3 mirrors Scenario~2 (V1) with a single change: the patch is vertical rather than horizontal.
+In Scenario~2 (V1), patching yielded marked gains: higher IoU and lower MACE.
+In Scenario~3, these effects are attenuated: the deltas between patched variants and GT are smaller, and in several configurations performance under patching is slightly worse (IoU marginally lower, MACE marginally higher).
 This indicates that patch orientation matters; the vertical pattern provides weaker cues and delivers limited or negative impact compared with the horizontal variant.
-
-\begin{table}[H]
+\begin{table}[tph]
     \centering
     \caption{Quantitative results of Scenario 3 V1.}
     \label{tab:scenario3v1_results}
     \begin{tabularx}{\textwidth}{l c c *{4}{X}}
         \toprule
-            &             &   \multicolumn{1}{c}{\textbf{Patch No}}  & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                            \\
+                         &             & \multicolumn{1}{c}{\textbf{Patch No}} & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                   \\
         \cmidrule(lr){4-5}\cmidrule(lr){6-7}
-        \textbf{Ego}           &
-        \textbf{Veh. No}       &
+        \textbf{Ego}     &
+        \textbf{Veh. No} &
         \textbf{V1}      &
-        \textbf{GT}            & \textbf{V1}  &
-        \textbf{GT}            & \textbf{V1}  \\
+        \textbf{GT}      & \textbf{V1} &
+        \textbf{GT}      & \textbf{V1}                                                                                                                                  \\
         \midrule
-        ego         & 4  & 1 & 0,492039 & 0,482423 & 0,703703 & 0,482758 \\
-        cav1        & 4  & 1 & 0,473321 & 0,475341 & 0,555555 & 0,586206 \\
-        cav2        & 4  & 1 & 0,339446 & 0,314549 & 0,777777 & 0,793103 \\
-        cav3        & 4  & 1 & 0,38872 & 0,394115 & 0,703703 & 0,793103 \\
+        ego              & 4           & 1                                     & 0,4920                           & 0,4824                            & 0,7037 & 0,4827 \\
+        cav1             & 4           & 1                                     & 0,4733                           & 0,4753                            & 0,5555 & 0,5862 \\
+        cav2             & 4           & 1                                     & 0,3394                           & 0,3145                            & 0,7777 & 0,7931 \\
+        cav3             & 4           & 1                                     & 0,3887                           & 0,3941                            & 0,7037 & 0,7931 \\
         \bottomrule
     \end{tabularx}
 \end{table}
-
-\begin{table}[H]
+\begin{table}[tph]
     \centering
     \caption{Quantitative results of Scenario 4 V1.}
     \label{tab:scenario4v1_results}
     \begin{tabularx}{\textwidth}{l c c *{4}{X}}
         \toprule
-            &             &   \multicolumn{1}{c}{\textbf{Patch No}}  & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                            \\
+                         &             & \multicolumn{1}{c}{\textbf{Patch No}} & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                   \\
         \cmidrule(lr){4-5}\cmidrule(lr){6-7}
-        \textbf{Ego}           &
-        \textbf{Veh. No}       &
+        \textbf{Ego}     &
+        \textbf{Veh. No} &
         \textbf{V1}      &
-        \textbf{GT}            & \textbf{V1}  &
-        \textbf{GT}            & \textbf{V1}  \\
+        \textbf{GT}      & \textbf{V1} &
+        \textbf{GT}      & \textbf{V1}                                                                                                                                  \\
         \midrule
-        ego         & 4  & 1 & 0,44937 & 0,456762 & 0,333333 & 0,192307 \\
-        cav1        & 4  & 1 & 0,477732 & 0,486491 & 0,333333 & 0,269230 \\
-        cav2        & 4  & 1 & 0,350587 & 0,344079 & 0,592592 & 0,730769 \\
-        cav3        & 4  & 1 & 0,314439 & 0,303652 & 1,407407 & 1,538461 \\
+        ego              & 4           & 1                                     & 0,4493                           & 0,4567                            & 0,3333 & 0,1923 \\
+        cav1             & 4           & 1                                     & 0,4777                           & 0,4864                            & 0,3333 & 0,2692 \\
+        cav2             & 4           & 1                                     & 0,3505                           & 0,3440                            & 0,5925 & 0,7307 \\
+        cav3             & 4           & 1                                     & 0,3144                           & 0,3036                            & 1,4074 & 1,5384 \\
         \bottomrule
     \end{tabularx}
 \end{table}
-
-In Scenario~5 the effect of vertical patches is pronounced. The IoU delta between GT and V1 is large, indicating that the patch injects strong class-consistent cues that bias the detector. 
+In Scenario~5 the effect of vertical patches is pronounced. The IoU delta between GT and V1 is large, indicating that the patch injects strong class-consistent cues that bias the detector.
 CAV3 is too far and occluded relative to the attack region, so its signals are effectively unaffected; the observed MACE near 1 is explained by systematic missed detections when no viewpoint observes the target, the model emits no box for CAV3 and the per-object error saturates.
-
-\begin{table}[H]
+\begin{table}[tph]
     \centering
     \caption{Quantitative results of Scenario 5 V1.}
     \label{tab:scenario5v1_results}
     \begin{tabularx}{\textwidth}{l c c *{4}{X}}
         \toprule
-            &             &   \multicolumn{1}{c}{\textbf{Patch No}}  & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                            \\
+                         &             & \multicolumn{1}{c}{\textbf{Patch No}} & \multicolumn{2}{c}{\textbf{IoU}} & \multicolumn{2}{c}{\textbf{MACE}}                   \\
         \cmidrule(lr){4-5}\cmidrule(lr){6-7}
-        \textbf{Ego}           &
-        \textbf{Veh. No}       &
+        \textbf{Ego}     &
+        \textbf{Veh. No} &
         \textbf{V1}      &
-        \textbf{GT}            & \textbf{V1}  &
-        \textbf{GT}            & \textbf{V1}  \\
+        \textbf{GT}      & \textbf{V1} &
+        \textbf{GT}      & \textbf{V1}                                                                                                                                  \\
         \midrule
-        ego         & 4  & 1 & 0,506981 & 0,467104 & 0,551724 & 0,5 \\
-        cav1        & 4  & 1 & 0,4211 & 0,392018 & 0,482758 & 0,571428 \\
-        cav2        & 4  & 1 & 0,4617 & 0,407848 & 0,551724 & 0,5 \\
-        cav3        & 4  & 1 & 0 & 0 & 1 & 1 \\
+        ego              & 4           & 1                                     & 0,5069                           & 0,4671                            & 0,5517 & 0,5    \\
+        cav1             & 4           & 1                                     & 0,4211                           & 0,3920                            & 0,4827 & 0,5714 \\
+        cav2             & 4           & 1                                     & 0,4617                           & 0,4078                            & 0,5517 & 0,5    \\
+        cav3             & 4           & 1                                     & 0                                & 0                                 & 1      & 1      \\
         \bottomrule
     \end{tabularx}
 \end{table}
-
 \section{Qualitative Results}
 \label{sec:qualitative_results}
 
 \subsection{Scenario 1}
-\begin{figure}[H]
+\begin{figure}[tph]
     \centering
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario1v12vh.jpg}
         \caption{Sample of effective patch attack on Scenario 1 V1 with 2 vehicles.}
-        \label{fig:scenario1_2vh}
+        \label{fig:scenario1_2vh_v1}
     \end{subfigure}
     \vspace{0.5cm}
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario1v22vh.jpg}
         \caption{Sample of effective patch attack on Scenario 1 V2 with 2 vehicles.}
-        \label{fig:scenario1_2vh}
+        \label{fig:scenario1_2vh_v2}
     \end{subfigure}
-    \caption{Qualitative examples of patch attacks in Scenario 1 with different vehicle configurations at the same timestep.}
-    \label{fig:qualitative_results}
+    \vspace{0.5cm}
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/scenario1v12vh_nopatch.png}
+        \caption{Corresponding no patch version for Scenario 1 V1 with 2 vehicles.}
+        \label{fig:scenario1_2vh_nopatch}
+    \end{subfigure}
+    \caption{Qualitative examples of patch attacks in Scenario 1 with 2 vehicles at the same timestep.
+        At the end of the sequence, we observe the result without the patch applied.}
+    \label{fig:scenario1_2vh}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[tph]
     \centering
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario1v14vh.jpg}
         \caption{Sample of effective patch attack on Scenario 1 V1 with 4 vehicles.}
-        \label{fig:scenario1_2vh}
+        \label{fig:scenario1_4vh_v1}
     \end{subfigure}
     \vspace{0.5cm}
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario1v24vh.jpg}
         \caption{Sample of effective patch attack on Scenario 1 V2 with 4 vehicles.}
-        \label{fig:scenario1_4vh}
+        \label{fig:scenario1_4vh_v2}
     \end{subfigure}
-    \caption{Qualitative examples of patch attacks in Scenario 1 V2 with different vehicle configurations at the same timestep.}
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/scenario1v14vh_nopatch.png}
+        \caption{Corresponding no patch version for Scenario 1 with 4 vehicles.}
+        \label{fig:scenario1_4vh_nopatch}
+    \end{subfigure}
+    \caption{Qualitative examples of patch attacks in Scenario 1 with 4 vehicles at the same timestep.
+        At the end of the sequence, we observe the result without the patch applied.}
+    \label{fig:scenario1_4vh}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[tph]
     \centering
     \begin{subfigure}[b]{1\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/results/scenario1v15vh.jpg}
+        \includegraphics[width=\textwidth]{figures/results/scenario1v15vh.png}
         \caption{Sample of effective patch attack on Scenario 1 V1 with 5 vehicles.}
-        \label{fig:scenario1_5vh}
+        \label{fig:scenario1_5vh_v1}
     \end{subfigure}
     \vspace{0.5cm}
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario1v25vh.jpg}
         \caption{Sample of effective patch attack on Scenario 1 V2 with 5 vehicles.}
-        \label{fig:scenario1_5vh}
-    \end{subfigure}
-\end{figure}
-
-From the figures \ref{fig:scenario1_2vh}, \ref{fig:scenario1_4vh}, \ref{fig:scenario1_5vh} we can observe the effectiveness of the patch attacks across different vehicle configurations in Scenario 1. 
-The visual examples demonstrate how the attacks adapt to varying numbers of vehicles.
-
-\subsection{Scenario 2}
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{1\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/results/scenario2gt2vh.jpg}
-        \caption{Sample of the perception of Scenario 2 ground truth with 2 vehicles.}
-        \label{fig:scenario2_gt2vh}
+        \label{fig:scenario1_5vh_v2}
     \end{subfigure}
     \vspace{0.5cm}
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/scenario1v15vh_nopatch.png}
+        \caption{Corresponding no patch version for Scenario 1 with 5 vehicles.}
+        \label{fig:scenario1_5vh_nopatch}
+    \end{subfigure}
+    \caption{Qualitative examples of patch attacks in Scenario 1 with 5 vehicles at the same timestep.
+        At the end of the sequence, we observe the result without the patch applied.}
+    \label{fig:scenario1_5vh}
+\end{figure}
+
+From the figures \ref{fig:scenario1_2vh}, \ref{fig:scenario1_4vh}, \ref{fig:scenario1_5vh} we can observe the effectiveness of the patch attacks across different vehicle configurations in Scenario 1.
+The visual examples demonstrate how the attacks adapt to varying numbers of vehicles and patches.
+
+\subsection{Scenario 2}
+\begin{figure}[tph]
+    \centering
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario2v12vh.jpg}
         \caption{Sample of effective patch attack on Scenario 2 V1 with 2 vehicles.}
-        \label{fig:scenario2_2vh}
+        \label{fig:scenario2_2vh_v1}
     \end{subfigure}
+    \vspace{0.5cm}
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/scenario2gt2vh.jpg}
+        \caption{Corresponding no patch version for Scenario 2 with 2 vehicles.}
+        \label{fig:scenario2_2vh_nopatch}
+    \end{subfigure}
+    \caption{Qualitative examples of patch attacks in Scenario 2 with 2 vehicles at the same timestep.
+        At the end of the sequence, we observe the result without the patch applied.}
+    \label{fig:scenario2_2vh}
 \end{figure}
 
-In that case we can observe that starting from the ground truth there is some problems with the perception of the environment,
+In that case we can observe that starting from the no patch versione \ref{fig:scenario2_2vh_nopatch} there is some problems with the perception of the environment,
 adding the patch attack introduces additional challenges, as the model must now contend with both the original scene and the adversarial modifications.
 
 \subsection{Scenario 3}
 
-\begin{figure}[H]
+\begin{figure}[tph]
     \centering
-    \begin{subfigure}[b]{1\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/results/scenario3gt.png}
-        \caption{Sample of the perception of Scenario 3 ground truth with 4 vehicles.}
-        \label{fig:scenario3_gt4vh}
-    \end{subfigure}
-    \vspace{0.5cm}
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario3.png}
         \caption{Sample of effective patch attack on Scenario 3 with 4 vehicles.}
-        \label{fig:scenario3_4vh}
-    \end{subfigure}
-\end{figure}
-
-In this scenario, we can clearly observe the effectiveness of the patch attacks. 
-Although the ego vehicle does not have a direct view of the patch, collaboration allows the features of the patch to be shared with it. Even when two additional CAVs are not directly targeted by the patch, the attack remains effective. 
-However, the effect is not faithfully represented, as the patch appears in the BEV rather than in its actual physical position.
-
-\subsection{Scenario 5}
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{1\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/results/scenario5noeffectgt.png}
-        \caption{Perception sample of Scenario 5 ground truth with 4 vehicles.}
-        \label{fig:scenario5_gt4vh}
+        \label{fig:scenario3_4vh_v1}
     \end{subfigure}
     \vspace{0.5cm}
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/scenario3gt.png}
+        \caption{Corresponding no patch version for Scenario 3 with 4 vehicles.}
+        \label{fig:scenario3_4vh_v1_nopatch}
+    \end{subfigure}
+    \caption{Qualitative examples of patch attacks in Scenario 3 with 4 vehicles at the same timestep.
+        At the end of the sequence, we observe the result without the patch applied.}
+    \label{fig:scenario3_4vh}
+\end{figure}
+
+In this scenario, we can clearly observe the effectiveness of the patch attacks.
+Although the ego vehicle does not have a direct view of the patch, collaboration allows the features of the patch to be shared with it. Even when two additional CAVs are not directly targeted by the patch, the attack remains effective.
+However, the effect is not faithfully represented, as the patch appears in the BEV in a different position rather than in its actual physical position. (See Figure~\ref{fig:scenario3_4vh})
+
+\subsection{Scenario 5}
+\begin{figure}[tph]
+    \centering
     \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/results/scenario5noeffect.png}
         \caption{Perception sample of Scenario 5 under patch attack with 4 vehicles.}
-        \label{fig:scenario5_4vh}
-    \end{subfigure}
-\end{figure}
-
-In Scenario~5, we observe an interesting case: when the ego vehicle is directly subjected to the patch attack, the perception of the model is not significantly affected. This is likely because the patch does not alter the most relevant features for the ego vehicle’s perception, and the BEV map shared by the other CAVs further mitigates the impact of the attack.
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{1\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/results/scenario5gt.png}
-        \caption{Perception sample of Scenario 5 ground truth with 4 vehicles.}
-        \label{fig:scenario5_gt4vh_effect}
+        \label{fig:scenario5_4vh_v1}
     \end{subfigure}
     \vspace{0.5cm}
     \begin{subfigure}[b]{1\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/results/scenario5.png}
-        \caption{Perception sample of Scenario 5 under patch attack with 4 vehicles.}
-        \label{fig:scenario5_4vh_effect}
+        \includegraphics[width=\textwidth]{figures/results/scenario5noeffectgt.png}
+        \caption{Perception sample of Scenario 5 ground truth with 4 vehicles.}
+        \label{fig:scenario5_4vh_v1_nopatch}
     \end{subfigure}
+    \caption{
+        Qualitative examples of patch attacks in Scenario 5 with 4 vehicles at the same timestep.
+        At the end of the sequence, we observe the result without the patch applied.
+    }
+    \label{fig:scenario5_4vh}
 \end{figure}
 
-Conversely, when the patch is perceived by only one CAV, the ego vehicle exhibits a higher number of false detections. Due to the layout of the scenario, the patch likely falls within the sensing range of a single CAV, making it impossible for other vehicles to detect it and correct the perception. This emphasizes the importance of collaboration and feature sharing among CAVs to mitigate the effects of adversarial attacks. It is plausible that in Figure~\ref{fig:scenario5_4vh} no significant effect is observed because the leading CAV is farther from the patch and helps the ego vehicle to disregard it, whereas in Figure~\ref{fig:scenario5_4vh_effect} the CAV lacks additional vehicles for cross-validation, resulting in false detections that cannot be suppressed.
+In Scenario~5, we observe an interesting case: when the ego vehicle is directly subjected to the patch attack, the perception of the model is not significantly affected. This is likely because the patch does not alter the most relevant features for the ego vehicle’s perception, and the BEV map shared by the other CAVs further mitigates the impact of the attack.
+
+\begin{figure}[tph]
+    \centering
+
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/scenario5.png}
+        \caption{Sample of effective patch attack on Scenario 5 with 4 vehicles.}
+        \label{fig:scenario5_4vh_effect}
+    \end{subfigure}
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/scenario5gt.png}
+        \caption{Corresponding no patch version for Scenario 5 with 4 vehicles.}
+        \label{fig:scenario5_gt4vh_effect}
+    \end{subfigure}
+    \caption{
+        Qualitative examples of patch attacks in Scenario 5 with 4 vehicles at the same timestep.
+        At the end of the sequence, we observe the result without the patch applied.
+    }
+    \label{fig:scenario5_4vh_v2}
+\end{figure}
+
+Conversely, when the patch is perceived by only one CAV, the ego vehicle exhibits a higher number of false detections.
+Due to the layout of the scenario, the patch likely falls within the sensing range of a single CAV, making it impossible for other vehicles to detect it and correct the perception.
+This emphasizes the importance of collaboration and feature sharing among CAVs to mitigate the effects of adversarial attacks.
+It is plausible that in Figure~\ref{fig:scenario5_4vh} no significant effect is observed because the leading CAV is farther from the patch and helps the ego vehicle to disregard it, whereas in Figure~\ref{fig:scenario5_4vh_effect} the CAV lacks additional vehicles for cross-validation, resulting in false detections that cannot be suppressed.

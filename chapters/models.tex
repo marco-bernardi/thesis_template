@@ -3,7 +3,9 @@
 
 \section{System Model}
 
-We consider a collaborative perception and decision-making system involving a fleet of autonomous vehicles. The system operates in discrete time steps \( t \in \{0, 1, \dots, T\} \), where each vehicle processes local sensor data, optionally shares information with others, and decides on its next action based on a shared or enriched understanding of the environment.
+We consider the presence of an external adversary targeting a fleet of autonomous vehicles.  
+At each discrete time step \( t \in \{0, 1, \dots, T\} \), the attacker seeks to interfere with the vehicles’ perception or decision-making processes by exploiting their reliance on sensor inputs.  
+Rather than emphasizing inter-vehicle collaboration, the analysis focuses on how malicious perturbations introduced from outside the system can compromise the vehicles’ understanding of the environment and thereby influence their subsequent actions.  
 
 \subsection{Vehicle State and Sensors}
 
