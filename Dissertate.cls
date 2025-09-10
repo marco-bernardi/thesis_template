@@ -78,7 +78,6 @@
 % Fonts.
 \RequirePackage{color}
 %\RequirePackage{xcolor}
-\usepackage{hyperref}
 \RequirePackage{url}
 \usepackage{url}
 \Urlmuskip = 0mu plus 1mu
@@ -206,14 +205,6 @@
 \definecolor{chaptergrey}{rgb}{0.61, 0, 0.09} % dialed back a little
 \definecolor{midgrey}{rgb}{0.4, 0.4, 0.4}
 
-\hypersetup{
-    colorlinks,
-    citecolor=black,
-    filecolor=black,
-    linkcolor=black,
-    urlcolor=black,
-}
-
 
 \renewcommand{\frontmatter}{
 	\pagenumbering{roman}
@@ -286,7 +277,7 @@
 	  \textit{Supervisor} \hfill \textit{Master Candidate}\\
 	  \vspace{1pt}
 	  \@advisor \hfill \@author\\
-	  \@university \\
+	  \@university \hfill 2107781\\
 	%   \vspace{6pt}
 	%   \textit{Co-supervisor} \\
 	%   \@coadvisorOne \\
