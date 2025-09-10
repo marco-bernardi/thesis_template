@@ -36,11 +36,13 @@ Collaborative perception is not uniformly vulnerable or uniformly robust. Redund
 Extend patches to temporally coherent patterns and optimize for multi-view conflict. Evaluate additional fusion strategies and calibrate trust across agents based on view geometry and agreement. Add metrics for recall/precision, temporal consistency, and cross-agent consensus. Validate under broader environmental conditions and with real-vehicle experiments.
 
 \section{Closing}
-The results draw a precise picture: collaboration suppresses some patch effects while exposing others. 
-Attack efficacy is conditional, visibility-gated, and orientation-sensitive. 
-At the current stage of collaborative perception, systems remain vulnerable to adversarial patches and can be exploited with limited system knowledge. 
-The absence of a stable, robust perception model prevents definitive conclusions and produces noisy, inconsistent outcomes. 
-The state of the art in collaboration has not eliminated adversarial vulnerabilities. 
-Resilience scales with viewpoint redundancy: collaboration is effective with a sufficiently large platoon, whereas small platoons remain disproportionately susceptible. 
-While we demonstrated the potential harm of adversarial patches, with the current model we could not conditionally induce BEV detections at specified positions as envisioned in the threat model; 
-instead, patch-induced artifacts appeared at inconsistent, often random locations.
+The results draw a precise picture: collaboration suppresses some patch effects while exposing others.
+Attack efficacy is conditional, visibility-gated, and orientation-sensitive.
+At the current stage of collaborative perception, systems remain vulnerable to adversarial patches and can be exploited with limited system knowledge.
+The absence of a stable, robust perception model prevents definitive conclusions and produces noisy, inconsistent outcomes.
+The state of the art in collaboration has not eliminated adversarial vulnerabilities.
+Resilience scales with viewpoint redundancy: collaboration is effective with a sufficiently large platoon, whereas small platoons remain disproportionately susceptible.
+While we demonstrated the potential harm of adversarial patches, with the current model we could not conditionally induce BEV detections at specified positions as envisioned in the threat model; instead, patch-induced artifacts appeared at inconsistent, often random locations.
+
+Furthermore, both our experiments and the current state of the art indicate that no perception models with ideal performance are yet available to fully evaluate collaborative frameworks in real-world environments relying solely on cameras, without the support of additional sensing modalities such as LiDAR, radar, or ultrasonic sensors.
+It can be reasonably assumed that a more advanced model would still be affected by similar vulnerabilities, although no definitive conclusion can be drawn at this stage.

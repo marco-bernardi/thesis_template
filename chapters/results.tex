@@ -393,3 +393,54 @@ Conversely, when the patch is perceived by only one CAV, the ego vehicle exhibit
 Due to the layout of the scenario, the patch likely falls within the sensing range of a single CAV, making it impossible for other vehicles to detect it and correct the perception.
 This emphasizes the importance of collaboration and feature sharing among CAVs to mitigate the effects of adversarial attacks.
 It is plausible that in Figure~\ref{fig:scenario5_4vh} no significant effect is observed because the leading CAV is farther from the patch and helps the ego vehicle to disregard it, whereas in Figure~\ref{fig:scenario5_4vh_effect} the CAV lacks additional vehicles for cross-validation, resulting in false detections that cannot be suppressed.
+
+\section{Indoor Experiments}
+
+This section highlights the inefficiency of the tested models in our indoor scenario, emphasizing the associated challenges and limitations.  
+According to the CoBEVT Appendix, the model requires camera inputs with a 110° FOV to ensure a 10° overlap between adjacent cameras.  
+
+We evaluated the model using four cameras with different FOVs:  
+\begin{itemize}
+    \item Logitech C920 and C922 Pro, both with a 78° FOV and 3 MP resolution.  
+    \item Innodisk EV2U-SGR1-MMC1\cite{Innodisk_EV2U-SGR1-MMC1} equipped with two lens configurations: 58° and 121°, both with 2 MP resolution.  
+\end{itemize}
+
+\begin{figure}[tph]
+    \centering
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/0000_c920.png}
+        \caption{Run on the indoor scenario with 2 vehicles and no patch. Camera: Logitech C920.}
+        \label{fig:indoor_c920}
+    \end{subfigure}
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/0000_c922pro.png}
+        \caption{Run on the indoor scenario with 2 vehicles and no patch. Camera: Logitech C922 Pro.}
+        \label{fig:indoor_c922pro}
+    \end{subfigure}
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/0000_innodisk58.png}
+        \caption{Run on the indoor scenario with 2 vehicles and no patch. Camera: Innodisk 58°.}
+        \label{fig:indoor_innodisk58}
+    \end{subfigure}
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/results/0000_innodisk120.png}
+        \caption{Run on the indoor scenario with 2 vehicles and no patch. Camera: Innodisk 121°.}
+        \label{fig:indoor_innodisk120}
+    \end{subfigure}
+\end{figure}
+
+From Figures~\ref{fig:indoor_c920}--\ref{fig:indoor_innodisk120}, the model consistently fails to detect vehicles with sufficient accuracy. Predictions are noisy and overlapping.  
+
+The Logitech C920 (Figure~\ref{fig:indoor_c920}) provides comparatively better results despite its FOV being far from the CoBEVT requirements. The C922 Pro (Figure~\ref{fig:indoor_c922pro}), which appears to share the same sensor as the C920 (datasheets suggest the main difference lies in maximum framerate), performs worse. The Innodisk 58° camera (Figure~\ref{fig:indoor_innodisk58}) has too narrow an FOV to capture the full scene, resulting in very poor performance. The Innodisk 121° camera (Figure~\ref{fig:indoor_innodisk120}) detects only a single vehicle, with predictions still noisy.  
+
+These results underline the difficulty of adapting the model to our indoor scenario and highlight the need for models capable of operating under different camera configurations. Likely causes include mismatched FOVs, environmental noise, or lighting conditions differing from the training dataset. This suggests that the model is overfitted to the CARLA environment and fails to generalize to real-world scenarios.  
